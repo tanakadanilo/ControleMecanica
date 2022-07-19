@@ -1,0 +1,16 @@
+2;City;2;false
+4;Palio;3;true
+5;Fit;2;false
+2;City;2;false
+0;Fita;2;false
+5;Fit;2;true
+2;City;2;false
+0;City a;2;false
+2;City;2;true
+0;City tes;2;false
+0;HB20;6;false
+0;HB20;3;false
+0;HB21;3;false
+0;HB20;6;false
+0;Civic;2;false
+8;Civic2;2;false
