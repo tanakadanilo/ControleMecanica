@@ -7,6 +7,7 @@ package persistencia;
 import enumerations.EstadosBrazil;
 import exceptions.DataBaseException;
 import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -26,8 +27,10 @@ import modelos.auxiliares.Endereco;
  */
 public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
 
+    Funcionario funcionarioVazio = new Funcionario();
+
     @Override
-    public Funcionario parse(String dadosCompletos) {
+    public Funcionario parse(String dadosCompletos) throws SystemErrorException {
         Funcionario f = null;
         try {
             String[] dados = dadosCompletos.split(";");
@@ -81,8 +84,8 @@ public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
     }
 
     @Override
-    public int getID(Funcionario obj) throws InvalidInputException {
-        try ( BufferedReader br = new BufferedReader(new FileReader(Funcionario.getNomeArquivoDisco()))) {
+    public int getID(Funcionario obj) throws InvalidInputException, SystemErrorException {
+        try ( BufferedReader br = new BufferedReader(new FileReader(obj.getNomeArquivoDisco()))) {
             String linha = br.readLine();
             while (linha != null) {
                 Funcionario f = parse(linha);// * parsing linha
@@ -92,7 +95,7 @@ public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
                 linha = br.readLine();
             }
         } catch (IOException ex) {
-            try ( FileWriter fr = new FileWriter(Funcionario.getNomeArquivoDisco())) {
+            try ( FileWriter fr = new FileWriter(obj.getNomeArquivoDisco())) {
 //   * criando novo arquivo vazio(resettando o banco de dados
             } catch (IOException ex1) {//   * fudeu rapaz, não faço ideia de como resolver
                 Logger.getLogger(ManipulaBancoFuncionario.class.getName()).log(Level.SEVERE, null, ex1);
@@ -105,7 +108,7 @@ public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
     }
 
     @Override
-    public int buscar(String dado) throws InvalidInputException {
+    public int buscar(String dado) throws InvalidInputException, SystemErrorException {
         ArrayList<Funcionario> listaFunc = buscarTodos();
 
         for (Funcionario f : listaFunc) {
@@ -116,7 +119,7 @@ public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
         return 0;
     }
 
-    public int buscar(String dado, boolean nome) throws InvalidInputException {
+    public int buscar(String dado, boolean nome) throws InvalidInputException, SystemErrorException {
         ArrayList<Funcionario> listaFunc = buscarTodos();
 
         for (Funcionario f : listaFunc) {
@@ -131,6 +134,16 @@ public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
     public boolean ativarEasterEgg(Funcionario obj) {
         return obj.ativarEasterEgg()
                 || obj.getEspecialidade().toUpperCase().contains("das couve".toUpperCase());
+    }
+
+    @Override
+    public String getNomeArquivoDisco() {
+        return funcionarioVazio.getNomeArquivoDisco();
+    }
+
+    @Override
+    public int getQuantidadeDeDadosSalvos() {
+        return 12;
     }
 
 }
