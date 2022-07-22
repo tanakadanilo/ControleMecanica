@@ -10,17 +10,15 @@ import java.util.Objects;
  *
  * @author tanak
  */
-public class Servico extends DataBase {
+public class Servico extends ExclusaoLogica {
 
     private String nomeServico;
     private double valorMaoDeObra;
 
     public Servico() {
-        super(4, "Servicos.txt", "IdServicos.txt");
     }
 
     public Servico(String nomeServico, double valorMaoDeObra) {
-        super(4, "Servicos.txt", "IdServicos.txt");
         this.nomeServico = nomeServico;
         this.valorMaoDeObra = valorMaoDeObra;
     }

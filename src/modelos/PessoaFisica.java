@@ -22,11 +22,11 @@ public class PessoaFisica extends Pessoa {
     protected Date dataNascimento;
 
     public PessoaFisica(String email, Endereco endereco, String... telefone) {
-        super(8, "ClientePessoaFisica.txt", "IdClientePessoaFisica.txt", email, endereco, telefone);
+        super(email, endereco, telefone);
     }
 
     public PessoaFisica(String nome, String cpf, Date dataNascimento, String email, Endereco endereco, String... telefone) {
-        super(8, "ClientePessoaFisica.txt", "IdClientePessoaFisica.txt", email, endereco, telefone);
+        super(email, endereco, telefone);
         if (!validaCPF(cpf)) {
             throw new InputMismatchException("O CPF: " + cpf + " é inválido");
         }

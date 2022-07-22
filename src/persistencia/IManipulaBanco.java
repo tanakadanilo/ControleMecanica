@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modelos.DataBase;
+import modelos.ExclusaoLogica;
 import modelos.auxiliares.MarcaVeiculo;
 import tela.TelaEasterEgg;
 
@@ -25,9 +25,7 @@ import tela.TelaEasterEgg;
  * @author tanak
  * @param <T>
  */
-public interface IManipulaBanco<T extends DataBase> {
-
-    public boolean ativarEasterEgg(T obj);
+public interface IManipulaBanco<T extends ExclusaoLogica> {
 
     String getNomeArquivoDisco();
 
@@ -58,9 +56,6 @@ public interface IManipulaBanco<T extends DataBase> {
     public T parse(String dados) throws SystemErrorException;
 
     public default void incluir(T obj) throws InvalidInputException, IOException, SystemErrorException {
-        if (ativarEasterEgg(obj)) {
-            new TelaEasterEgg().setVisible(true);
-        }
         ArrayList<T> listaCompleta = buscarTodos();//   * pegando todos os dados ativos do banco
         if (listaCompleta != null && !listaCompleta.isEmpty()) {//  * tem algo na lista
             for (T objAtual : listaCompleta) {//    * percorrendo toda a lista
@@ -70,7 +65,7 @@ public interface IManipulaBanco<T extends DataBase> {
             }
         }
         try ( BufferedWriter bw = new BufferedWriter(new FileWriter(this.getNomeArquivoDisco(), true))) {
-            int id = GeradorId.getID(obj.getArquivoID());
+            int id = GeradorId.getID(this.getNomeArquivoDisco());
             bw.write(id + ";" + obj.toString() + "\n");
         }
     }
@@ -216,16 +211,24 @@ public interface IManipulaBanco<T extends DataBase> {
         }
     }
 
-    private void limpaLinha(String linha) throws IOException {
-        StringBuilder bancoCompleto = new StringBuilder();
-        try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {//   * lendo todos os dados para serem reescritos no banco
-            String linhaBanco = br.readLine();
-            if (!linhaBanco.equals(linha)) {//  * não excluir
-                bancoCompleto.append(linhaBanco).append("\n");
+    public default void limpaLinha(String linha) {
+        try {
+            StringBuilder bancoCompleto = new StringBuilder();
+            try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {//   * lendo todos os dados para serem reescritos no banco
+                String linhaBanco = br.readLine();
+                if (!linhaBanco.equals(linha)) {//  * não excluir
+                    bancoCompleto.append(linhaBanco).append("\n");
+                }
             }
-        }
-        try ( BufferedWriter bw = new BufferedWriter(new FileWriter(this.getNomeArquivoDisco()))) {//   * apagando banco de dados defeituoso
-            bw.write(bancoCompleto.toString());//   * reescrevendo dados que serão salvos
+            try ( BufferedWriter bw = new BufferedWriter(new FileWriter(this.getNomeArquivoDisco()))) {//   * apagando banco de dados defeituoso
+                bw.write(bancoCompleto.toString());//   * reescrevendo dados que serão salvos
+            }
+        } catch (IOException e) {
+            try {
+                new FileWriter(this.getNomeArquivoDisco()).write("");
+            } catch (IOException ex) {
+                throw new IllegalStateException("Falha ao ler e ao criar o arquivo: \"" + this.getNomeArquivoDisco() + "\"");
+            }
         }
     }
 

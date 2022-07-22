@@ -4,6 +4,7 @@
  */
 package modelos;
 
+import exceptions.InvalidInputException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -11,13 +12,13 @@ import java.util.Date;
  *
  * @author ALUNO
  */
-public class OrdemDeServico extends DataBase {
+public class OrdemDeServico extends ExclusaoLogica {
 
     public enum SituacaoOrdemServico {
         EM_ABERTO, EM_EXECUCAO, CONCLUIDA, CANCELADA;
     }
 
-    private final static String arquivoCodigo = "codigoGeradoOrdensDeServico.txt";
+    private final static String NOME_ARQUIVO_CODIGO_OS = "CodigoOrdensDeServico.txt";
 
     private int codigo;
     private String defeitoRelatado;
@@ -34,14 +35,10 @@ public class OrdemDeServico extends DataBase {
     private double porcentagemDesconto;
 
     public OrdemDeServico() {
-        super(15, "OrdensDeServicos.txt", "IdOrdensDeServicos.txt");
-        NomeArquivoDisco = "OrdensDeServico.txt";
-        arquivoID = "IdOrdensDeServico.txt";
     }
 
     public OrdemDeServico(int codigo, String defeitoRelatado, int idServico, double valorMaoDeObra,
             int idFuncionarioResponsavel, int idVeiculo, double porcentagemDesconto) throws Exception {
-        super(15, "OrdensDeServicos.txt", "IdOrdensDeServicos.txt");
         if (porcentagemDesconto < 0 || porcentagemDesconto > 100) {
             throw new Exception("Tentou usar uma porcentagem de desconto de: " + porcentagemDesconto + "%, informe um valor válido");
         }
@@ -58,10 +55,9 @@ public class OrdemDeServico extends DataBase {
     }
 
     public OrdemDeServico(int codigo, String defeitoRelatado, int idServico, double valorMaoDeObra,
-            int idFuncionarioResponsavel, int idPeca, int quantidadePeca, double valorUnitarioDaPeca, int idVeiculo, double porcentagemDesconto) throws Exception {
-        super(15, "OrdensDeServicos.txt", "IdOrdensDeServicos.txt");
+            int idFuncionarioResponsavel, int idPeca, int quantidadePeca, double valorUnitarioDaPeca, int idVeiculo, double porcentagemDesconto) throws InvalidInputException {
         if (porcentagemDesconto < 0 || porcentagemDesconto > 100) {
-            throw new Exception("Tentou usar uma porcentagem de desconto de: " + porcentagemDesconto + "%, informe um valor válido");
+            throw new InvalidInputException("Tentou usar uma porcentagem de desconto de: " + porcentagemDesconto + "%, informe um valor válido");
         }
         this.codigo = codigo;
         this.defeitoRelatado = defeitoRelatado;
@@ -78,8 +74,8 @@ public class OrdemDeServico extends DataBase {
         this.dataEntrada = new Date();
     }
 
-    public static String getArquivoCodigo() {
-        return arquivoCodigo;
+    public static String getNOME_ARQUIVO_CODIGO_OS() {
+        return NOME_ARQUIVO_CODIGO_OS;
     }
 
     public double getPorcentagemDesconto() {
@@ -169,62 +165,67 @@ public class OrdemDeServico extends DataBase {
         return situacao;
     }
 
-    public void setSituacao(SituacaoOrdemServico situacao) throws Exception {
+    public void setSituacao(SituacaoOrdemServico situacao) throws InvalidInputException {
+        if (situacao == null) {
+            throw new IllegalStateException("Tentando trocar a situação da ordem de serviço: \"" + this + "\" para uma situação null");
+        }
         OUTER:
         switch (this.situacao) {//  * situação em que a OS está
             case EM_ABERTO:
                 // * orçamento 
-                if (situacao != null) {
-                    switch (situacao) {//   * para qual estado ela será mudada
-                        case EM_ABERTO:
-                            //   * transformar em orçamento
-                            throw new Exception("Já é um orçamento!");
-                        case EM_EXECUCAO:
-                            //    * tranformar em OS
-                            this.situacao = SituacaoOrdemServico.EM_EXECUCAO;
-                            break;
-                        case CONCLUIDA:
-                            //  * concluir
-                            throw new Exception("O orçamento não foi aprovado, por isso não é possivel já ter sido concluido!");
-                        case CANCELADA:
-                            //  * cancelar
-                            this.situacao = SituacaoOrdemServico.CANCELADA;
-                            break OUTER;
-                        default:
-                            break OUTER;
-                    }
+                switch (situacao) {//   * para qual estado ela será mudada
+                    case EM_ABERTO:
+//   * pass
+                        break;
+                    case EM_EXECUCAO:
+                        //    * tranformar em OS
+                        this.situacao = SituacaoOrdemServico.EM_EXECUCAO;
+                        break;
+                    case CONCLUIDA:
+                        //  * concluir
+                        throw new InvalidInputException("O orçamento não foi aprovado, por isso não é possivel já ter sido concluido!");
+                    case CANCELADA:
+                        //  * cancelar
+                        this.situacao = SituacaoOrdemServico.CANCELADA;
+                        break OUTER;
+                    default:
+                        break OUTER;
                 }
                 break;
             case EM_EXECUCAO:
                 // * orçamento aprovado
-                if (situacao != null) {
-                    switch (situacao) {//   * para qual estado ela será mudada
-                        case EM_ABERTO:
-                            //   * transformar em orçamento
-                            throw new Exception("Uma ordem de serviço não pode ser transformada em orçamento novamente!");
-                        case EM_EXECUCAO:
-                            //    * tranformar em OS
-                            throw new Exception("Esta ordem de serviço já está sendo executada");
-                        case CONCLUIDA:
-                            //  * concluir
-                            this.situacao = SituacaoOrdemServico.CONCLUIDA;
-                            this.dataSaida = new Date();
-                            break OUTER;
-                        case CANCELADA:
-                            //  * cancelar
-                            this.situacao = SituacaoOrdemServico.CANCELADA;
-                            break OUTER;
-                        default:
-                            break OUTER;
-                    }
+                switch (situacao) {//   * para qual estado ela será mudada
+                    case EM_ABERTO:
+                        //   * transformar em orçamento
+                        throw new InvalidInputException("Uma ordem de serviço não pode ser transformada em orçamento novamente!");
+                    case EM_EXECUCAO:
+//  * pass
+                        break;
+                    case CONCLUIDA:
+                        //  * concluir
+                        this.situacao = SituacaoOrdemServico.CONCLUIDA;
+                        this.dataSaida = new Date();//  * salvando a data atual como data de fechamento da OS
+                        break OUTER;
+                    case CANCELADA:
+                        //  * cancelar
+                        this.situacao = SituacaoOrdemServico.CANCELADA;
+                        break OUTER;
+                    default:
+                        break OUTER;
                 }
             case CONCLUIDA:
                 // * orçamento aprovado
-                throw new Exception("Esta ordem de serviço já foi concluida!");
+                throw new InvalidInputException("Esta ordem de serviço já foi concluida, não é possivel alterar uma nota fiscal!");
             case CANCELADA:
-                throw new Exception("Este orçamento não foi aprovado!");
+                switch (situacao) {
+                    case CONCLUIDA:
+                        throw new InvalidInputException("Este orçamento não foi aprovado ainda, por isso não é possível que já tenha sido concluido!");
+                    default:
+                        this.situacao = situacao;
+                        break;
+                }
             default:
-                throw new AssertionError("falha ao mudar status do Orçamento/Ordem de serviço/nota fiscal");
+                throw new AssertionError("falha ao mudar status do Orçamento/Ordem de serviço/nota fiscal, pois está tentando mudar para um estado inválido");
         }
     }
 

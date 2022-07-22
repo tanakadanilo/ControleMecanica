@@ -4,6 +4,9 @@
  */
 package modelos;
 
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
+import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.Objects;
 import persistencia.ManipulaBancoPecas;
@@ -12,7 +15,7 @@ import persistencia.ManipulaBancoPecas;
  *
  * @author ALUNO
  */
-public class Peca extends DataBase {
+public class Peca extends ExclusaoLogica {
 
     private String codigoPeca;
     private String descricao;
@@ -22,11 +25,9 @@ public class Peca extends DataBase {
     private int estoquequantidadeMinima;
 
     public Peca() {
-        super(8, "Pecas.txt", "IdPecas.txt");
     }
 
     public Peca(String codigoPeca, String descricao, float valorPeca) {
-        super(8, "Pecas.txt", "IdPecas.txt");
         this.codigoPeca = codigoPeca;
         this.descricao = descricao;
         this.valorPeca = valorPeca;
@@ -34,24 +35,18 @@ public class Peca extends DataBase {
     }
 
     public Peca(String codigoPeca, String descricao, float valorPeca, int quantidadeNoEstoque, int estoquequantidadeMinima) {
-        super(8, "Pecas.txt", "IdPecas.txt");
         this.codigoPeca = codigoPeca;
         this.descricao = descricao;
         this.valorPeca = valorPeca;
         this.quantidadeNoEstoque = quantidadeNoEstoque;
         this.estoquequantidadeMinima = estoquequantidadeMinima;
-        NomeArquivoDisco = "Pecas.txt";
-        arquivoID = "IdPecas.txt";
     }
 
     public Peca(String codigoPeca, String descricao, float valorPeca, int estoquequantidadeMinima) {
-        super(8, "Pecas.txt", "IdPecas.txt");
         this.codigoPeca = codigoPeca;
         this.descricao = descricao;
         this.valorPeca = valorPeca;
         this.estoquequantidadeMinima = estoquequantidadeMinima;
-        NomeArquivoDisco = "Pecas.txt";
-        arquivoID = "IdPecas.txt";
     }
 
     public String getCodigoPeca() {
@@ -102,16 +97,16 @@ public class Peca extends DataBase {
         this.estoquequantidadeMinima = estoquequantidadeMinima;
     }
 
-    public void retirarDoEstoque(int quantidadeAhSerRetirada) throws Exception {
+    public void retirarDoEstoque(int quantidadeAhSerRetirada) throws InvalidInputException, IOException, SystemErrorException {
         if (quantidadeAhSerRetirada < 0) {//   * valor negativo
-            throw new InvalidParameterException("A quantidade de peças a ser retirada do estoque não pode ser um valor negativo.");
+            throw new InvalidInputException("A quantidade de peças a ser retirada do estoque não pode ser um valor negativo.");
         }
         if (quantidadeAhSerRetirada == 0) {//  * não fazer nada
             return;//   * finalizando o método
         }
         if (quantidadeAhSerRetirada > quantidadeNoEstoque) {//   * não existem peças o suficiente no estoque
             System.out.println("tentando retirar: " + quantidadeAhSerRetirada);
-            throw new Exception("O estoque possui apenas: " + quantidadeNoEstoque + " peças, informe um valor inferior ou igual a isso!");
+            throw new InvalidInputException("O estoque possui apenas: " + quantidadeNoEstoque + " peças, informe um valor inferior ou igual a isso!");
         }
 //  * tudo certo
         Peca valorAntigo = new Peca(codigoPeca, descricao, valorPeca, quantidadeNoEstoque, estoquequantidadeMinima);
@@ -120,9 +115,9 @@ public class Peca extends DataBase {
         new ManipulaBancoPecas().editar(valorAntigo, this);
     }
 
-    public void cancelarReservarPecas(int quantidadeAhSerRetiradaDaReserva) throws Exception {
+    public void cancelarReservarPecas(int quantidadeAhSerRetiradaDaReserva) throws InvalidInputException, IOException, SystemErrorException {
         if (quantidadeAhSerRetiradaDaReserva < 0) {//   * valor negativo
-            throw new InvalidParameterException("A quantidade de peças a ser cancelada da reserva não pode ser um valor negativo.");
+            throw new InvalidInputException("A quantidade de peças a ser cancelada da reserva não pode ser um valor negativo.");
         }
         if (quantidadeAhSerRetiradaDaReserva == 0) {//  * não fazer nada
             return;//   * finalizando o método
@@ -138,15 +133,15 @@ public class Peca extends DataBase {
         new ManipulaBancoPecas().editar(valorAntigo, this);
     }
 
-    public void reservarPecas(int quantidadeAhSerReservada) throws Exception {
+    public void reservarPecas(int quantidadeAhSerReservada) throws InvalidInputException, IOException, SystemErrorException {
         if (quantidadeAhSerReservada < 0) {//   * valor negativo
-            throw new InvalidParameterException("A quantidade de peças a ser reservada não pode ser um valor negativo.");
+            throw new InvalidInputException("A quantidade de peças a ser reservada não pode ser um valor negativo.");
         }
         if (quantidadeAhSerReservada == 0) {//  * não fazer nada
             return;//   * finalizando o método
         }
         if (quantidadeAhSerReservada > (quantidadeNoEstoque - quantidadeReservadas)) {//   * faltam peças no estoque
-            throw new Exception("Estoque insuficiente! O estoque possui apenas " + quantidadeNoEstoque + " peças");
+            throw new InvalidInputException("Estoque insuficiente! O estoque possui apenas " + quantidadeNoEstoque + " peças");
         }
 //  * tudo certo
         Peca valorAntigo = new Peca(codigoPeca, descricao, valorPeca, quantidadeNoEstoque, estoquequantidadeMinima);

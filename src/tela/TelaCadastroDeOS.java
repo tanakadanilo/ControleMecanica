@@ -472,11 +472,11 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
 
             if (!jCheckBox1.isSelected()) {
                 //caso não vá usar peças
-                int codigoOS = geradorId.GeradorId.getID(OrdemDeServico.getArquivoCodigo());
+                int codigoOS = geradorId.GeradorId.getID(OrdemDeServico.getNOME_ARQUIVO_CODIGO_OS());
                 new ManipulaBancoOrdemServico().incluir(new OrdemDeServico(codigoOS, defeitoRelatado, idServico, valorMaoDeObra,
                         idFuncResponsavel, idVeiculo, porcentagemDesconto));
             } else {
-                int codigoOS = geradorId.GeradorId.getID(OrdemDeServico.getArquivoCodigo());
+                int codigoOS = geradorId.GeradorId.getID(OrdemDeServico.getNOME_ARQUIVO_CODIGO_OS());
                 int idPeca = new ManipulaBancoPecas().buscar(String.valueOf(jTablePecas.getValueAt(jTablePecas.getSelectedRow(), 0)));
                 int quantidadePecasUsadas = Integer.parseInt(jFormattedTextFieldQuantidadePecas.getText());
                 double valorUnitarioPeca = new ManipulaBancoPecas().buscar(idPeca).getValorPeca();//    * lendo o valor unitário da peça no banco de dados de peças

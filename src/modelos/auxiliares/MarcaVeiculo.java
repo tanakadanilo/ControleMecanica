@@ -1,23 +1,16 @@
 package modelos.auxiliares;
 
 import java.util.Objects;
-import modelos.DataBase;
+import modelos.ExclusaoLogica;
 
-public class MarcaVeiculo extends DataBase {
+public class MarcaVeiculo extends ExclusaoLogica {
 
     private String nomeMarca;
 
     public MarcaVeiculo() {
-        super(3, "MarcaVeiculo.txt", "IdMarcasVeiculos.txt");
-        this.NomeArquivoDisco = "MarcaVeiculo.txt";
-        this.arquivoID = "IdMarcasveiculos.txt";
     }
 
     public MarcaVeiculo(String nomeMarca) {
-        super(3, "MarcaVeiculo.txt", "IdMarcasVeiculos.txt");
-        this.NomeArquivoDisco = "MarcaVeiculo.txt";//   * salvanco nome do arquivo, para uso do banco de dados
-        this.arquivoID = "IdMarcasveiculos.txt";
-
         this.nomeMarca = nomeMarca;
     }
 

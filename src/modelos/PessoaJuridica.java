@@ -20,11 +20,10 @@ public class PessoaJuridica extends Pessoa {
     private String nomeFantasia;
 
     public PessoaJuridica() {
-        super(8, "ClientePessoaJuridica.txt", "IdClientePessoaJuridica.txt");
     }
 
     public PessoaJuridica(String cnpj, String razaoSocial, String nomeFantasia, String email, Endereco endereco, String... telefone) {
-        super(8, "ClientePessoaJuridica.txt", "IdClientePessoaJuridica.txt", email, endereco, telefone);
+        super(email, endereco, telefone);
         if (!validaCNPJ(cnpj)) {
             cnpj = desformatarCNPJ(cnpj);
             if (!validaCNPJ(cnpj)) {
@@ -34,8 +33,6 @@ public class PessoaJuridica extends Pessoa {
         this.cnpj = formataCNPJ(cnpj);//salvando cnpj já formatado
         this.razaoSocial = razaoSocial;
         this.nomeFantasia = nomeFantasia;
-        NomeArquivoDisco = "clientePessoaJuridica.txt";
-        arquivoID = "idGeradoClientePessoaJuridica.txt";
     }
 
     public String getCnpj() {

@@ -25,9 +25,13 @@ import modelos.auxiliares.Endereco;
  *
  * @author tanak
  */
-public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
+public class ManipulaBancoFuncionario extends DataBase implements IManipulaBanco<Funcionario> {
 
     Funcionario funcionarioVazio = new Funcionario();
+
+    public ManipulaBancoFuncionario() {
+        super(12, "Funcionarios.txt");
+    }
 
     @Override
     public Funcionario parse(String dadosCompletos) throws SystemErrorException {
@@ -85,7 +89,7 @@ public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
 
     @Override
     public int getID(Funcionario obj) throws InvalidInputException, SystemErrorException {
-        try ( BufferedReader br = new BufferedReader(new FileReader(obj.getNomeArquivoDisco()))) {
+        try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {
             String linha = br.readLine();
             while (linha != null) {
                 Funcionario f = parse(linha);// * parsing linha
@@ -95,12 +99,12 @@ public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
                 linha = br.readLine();
             }
         } catch (IOException ex) {
-            try ( FileWriter fr = new FileWriter(obj.getNomeArquivoDisco())) {
+            try ( FileWriter fr = new FileWriter(this.getNomeArquivoDisco())) {
+                fr.write("");
 //   * criando novo arquivo vazio(resettando o banco de dados
             } catch (IOException ex1) {//   * fudeu rapaz, não faço ideia de como resolver
-                Logger.getLogger(ManipulaBancoFuncionario.class.getName()).log(Level.SEVERE, null, ex1);
+                throw new IllegalStateException("Falha ao ler e ao criar o arquivo: \"" + this.getNomeArquivoDisco() + "\"");
             }
-            return 0;// * falha no banco de dados, arquivo não encontrado
         }
 
         return 0;// * objeto não encontrados
@@ -131,14 +135,8 @@ public class ManipulaBancoFuncionario implements IManipulaBanco<Funcionario> {
     }
 
     @Override
-    public boolean ativarEasterEgg(Funcionario obj) {
-        return obj.ativarEasterEgg()
-                || obj.getEspecialidade().toUpperCase().contains("das couve".toUpperCase());
-    }
-
-    @Override
     public String getNomeArquivoDisco() {
-        return funcionarioVazio.getNomeArquivoDisco();
+        return this.NomeArquivoDisco;
     }
 
     @Override

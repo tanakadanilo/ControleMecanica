@@ -29,8 +29,6 @@ public class Funcionario extends PessoaFisica {
         this.salariohora = salariohora;
         this.matricula = matricula;
 
-        NomeArquivoDisco = "Funcionarios.txt";
-        arquivoID = "IdFuncionarios.txt";
     }
 
     public String getEspecialidade() {

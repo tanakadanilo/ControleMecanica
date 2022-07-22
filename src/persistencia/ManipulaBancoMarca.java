@@ -14,10 +14,13 @@ import modelos.auxiliares.MarcaVeiculo;
  *
  * @author tanak
  */
-public class ManipulaBancoMarca implements IManipulaBanco<MarcaVeiculo> {
+public class ManipulaBancoMarca extends DataBase implements IManipulaBanco<MarcaVeiculo> {
 
     MarcaVeiculo marcaVazia = new MarcaVeiculo();
-    int quantidadeDeDadosAhSeremSalvos = 3;
+
+    public ManipulaBancoMarca(int quantidadeDeDadosNoBanco, String NomeArquivoDisco, String arquivoID) {
+        super(3, "MarcasVeiculos.txt");
+    }
 
     @Override
     public MarcaVeiculo parse(String dadosCompletos) throws SystemErrorException {
@@ -25,7 +28,7 @@ public class ManipulaBancoMarca implements IManipulaBanco<MarcaVeiculo> {
             String[] dados = dadosCompletos.split(";");
 //  * id, nome da marca, cadastro está ativo
 
-            if (dados.length != quantidadeDeDadosAhSeremSalvos) {
+            if (dados.length != this.quantidadeDeDadosNoBanco) {
                 System.out.println(dados.length);
                 System.out.println(dadosCompletos);
                 throw new DataBaseException("Dados incorretos");
@@ -43,7 +46,7 @@ public class ManipulaBancoMarca implements IManipulaBanco<MarcaVeiculo> {
 
     @Override
     public String getNomeArquivoDisco() {
-        return marcaVazia.getNomeArquivoDisco();
+        return this.NomeArquivoDisco;
     }
 
     @Override
@@ -59,13 +62,8 @@ public class ManipulaBancoMarca implements IManipulaBanco<MarcaVeiculo> {
     }
 
     @Override
-    public boolean ativarEasterEgg(MarcaVeiculo m) {
-        return m.getNomeMarca().toUpperCase().contains("das couve".toUpperCase());
-    }
-
-    @Override
     public int getQuantidadeDeDadosSalvos() {
-        return this.quantidadeDeDadosAhSeremSalvos;
+        return this.quantidadeDeDadosNoBanco;
     }
 
 }

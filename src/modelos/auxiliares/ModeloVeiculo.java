@@ -1,15 +1,12 @@
 package modelos.auxiliares;
 
 import java.util.Objects;
+import modelos.ExclusaoLogica;
 
-public class ModeloVeiculo {
-
-    private final static String NomeArquivoDisco = "Modelos.txt";
-    private final static String arquivoID = "idGeradoModelos.txt";
+public class ModeloVeiculo extends ExclusaoLogica {
 
     private String NomeModelo;
     private int idMarca;
-    private boolean cadastroAtivo = true;
 
     public ModeloVeiculo() {
     }
@@ -17,22 +14,6 @@ public class ModeloVeiculo {
     public ModeloVeiculo(String NomeModelo, int idMarca) {
         this.NomeModelo = NomeModelo;
         this.idMarca = idMarca;
-    }
-
-    public static String getNomeArquivoDisco() {
-        return NomeArquivoDisco;
-    }
-
-    public static String getArquivoID() {
-        return arquivoID;
-    }
-
-    public boolean isCadastroAtivo() {
-        return cadastroAtivo;
-    }
-
-    public void setCadastroAtivo(boolean cadastroAtivo) {
-        this.cadastroAtivo = cadastroAtivo;
     }
 
     public String getNomeModelo() {

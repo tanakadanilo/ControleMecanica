@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author ALUNO
  */
-public class Veiculo extends DataBase {
+public class Veiculo extends ExclusaoLogica {
 
     private int idModelo;//talvez criar uma classe separada
     private int idMarca;
@@ -26,12 +26,10 @@ public class Veiculo extends DataBase {
     private TipoCliente tipoCliente;
 
     public Veiculo() {
-        super(13, "Veiculos.txt", "IdVeiculos.txt");
     }
 
     public Veiculo(int idModelo, int idMarca, String chassi, String renavam,
             String tipoVeiculo, String placa, int anoFabricacao, int anoModelo, int quilometragem, int idDonoVeiculo, TipoCliente tipoCliente) throws Exception {
-        super(13, "Veiculos.txt", "IdVeiculos.txt");
         if (!validaPlaca(placa)) {
             throw new Exception("A placa: \"" + placa + "\" não é válida");
         }

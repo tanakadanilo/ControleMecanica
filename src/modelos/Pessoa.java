@@ -9,18 +9,16 @@ import java.util.InputMismatchException;
  *
  * @author tanak
  */
-public abstract class Pessoa extends DataBase {
+public abstract class Pessoa extends ExclusaoLogica {
 
     protected String[] telefone = new String[3];
     protected String email;
     protected Endereco endereco;
 
-    public Pessoa(int quantidadeDeDadosNoBanco, String NomeArquivoDisco, String arquivoID) {
-        super(quantidadeDeDadosNoBanco, NomeArquivoDisco, arquivoID);
+    public Pessoa() {
     }
 
-    public Pessoa(int quantidadeDeDadosNoBanco, String NomeArquivoDisco, String arquivoID, String email, Endereco endereco, String[] telefone) {
-        super(quantidadeDeDadosNoBanco, NomeArquivoDisco, arquivoID);
+    public Pessoa(String email, Endereco endereco, String[] telefone) {
         if (!validaTelefone(telefone[0]) || !validaTelefone(telefone[1]) || !validaTelefone(telefone[2])) {
             System.out.println(telefone.length);
             System.out.println(Arrays.toString(telefone));
@@ -97,6 +95,6 @@ public abstract class Pessoa extends DataBase {
 
     @Override
     public String toString() {
-        return Arrays.toString(telefone) + ";" + email + ";" + endereco.toString() + ";" + cadastroAtivo;
+        return Arrays.toString(telefone) + ";" + email + ";" + endereco.toString() + ";" + this.isCadastroAtivo();
     }
 }
