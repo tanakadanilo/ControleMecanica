@@ -11,8 +11,8 @@ package modelos;
 public abstract class DataBase {
 
     /*  * classe pai de todos as classes que serão salvas no banco de dados
-     *
-     * salvando ccoom abstrata apennas para não ser inicializadas
+         *
+        * salvando ccoom abstrata apennas para não ser inicializadas
      */
     protected int quantidadeDeDadosNoBanco;
     protected String NomeArquivoDisco;

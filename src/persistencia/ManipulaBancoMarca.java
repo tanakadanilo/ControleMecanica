@@ -4,8 +4,9 @@
  */
 package persistencia;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import exceptions.DataBaseException;
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
 import java.util.ArrayList;
 import modelos.auxiliares.MarcaVeiculo;
 
@@ -15,61 +16,38 @@ import modelos.auxiliares.MarcaVeiculo;
  */
 public class ManipulaBancoMarca implements IManipulaBanco<MarcaVeiculo> {
 
+    MarcaVeiculo marcaVazia = new MarcaVeiculo();
+    int quantidadeDeDadosAhSeremSalvos = 3;
+
     @Override
-    public MarcaVeiculo parse(String dadosCompletos) throws Exception {
-        String[] dados = dadosCompletos.split(";");
+    public MarcaVeiculo parse(String dadosCompletos) throws SystemErrorException {
+        try {
+            String[] dados = dadosCompletos.split(";");
 //  * id, nome da marca, cadastro está ativo
 
-        if (dados.length != 3) {
-            System.out.println(dados.length);
-            System.out.println(dadosCompletos);
-            throw new Exception("Dados incorretos");
-        }
-        MarcaVeiculo marca = new MarcaVeiculo(dados[1]);
-        if (dados[2].equals("false")) {
-            marca.setCadastroAtivo(false);
-        }
-        return marca;
-    }
-
-    @Override
-    public String getNomeDoArquivoNoDisco() {
-        return MarcaVeiculo.getNomeArquivoDisco();
-    }
-
-    @Override
-    public int getID(MarcaVeiculo obj) throws Exception {
-        try ( BufferedReader br = new BufferedReader(new FileReader(MarcaVeiculo.getNomeArquivoDisco()))) {
-            String linha = br.readLine();
-            while (linha != null) {
-                MarcaVeiculo v = parse(linha);// * parsing linha
-                if (v.equals(obj) && v.isCadastroAtivo()) {//  * encontrou
-                    return Integer.parseInt(linha.split(";")[0]);// * retornando o id
-                }
-                linha = br.readLine();
+            if (dados.length != quantidadeDeDadosAhSeremSalvos) {
+                System.out.println(dados.length);
+                System.out.println(dadosCompletos);
+                throw new DataBaseException("Dados incorretos");
             }
+            MarcaVeiculo marca = new MarcaVeiculo(dados[1]);
+            if (dados[2].equals("false")) {
+                marca.setCadastroAtivo(false);
+            }
+            return marca;
+        } catch (DataBaseException e) {
+            corrigeBanco();//   * corrigindo defeito no banco
+            return null;
         }
-        return 0;// * objeto não encontrado
     }
 
     @Override
-    public String getNomeArquivoID() {
-        return MarcaVeiculo.getArquivoID();
+    public String getNomeArquivoDisco() {
+        return marcaVazia.getNomeArquivoDisco();
     }
 
     @Override
-    public boolean isCadastroAtivo(MarcaVeiculo obj) {
-        return obj.isCadastroAtivo();
-    }
-
-    @Override
-    public MarcaVeiculo setCadastroAtivo(MarcaVeiculo obj, boolean flag) {
-        obj.setCadastroAtivo(flag);
-        return obj;
-    }
-
-    @Override
-    public int buscar(String dado) throws Exception {
+    public int buscar(String dado) throws InvalidInputException, SystemErrorException {
         ArrayList<MarcaVeiculo> listaMarcas = buscarTodos();
         for (MarcaVeiculo marca : listaMarcas) {
             if (marca.getNomeMarca().equals(dado)) {//  * encontrou
@@ -84,4 +62,10 @@ public class ManipulaBancoMarca implements IManipulaBanco<MarcaVeiculo> {
     public boolean ativarEasterEgg(MarcaVeiculo m) {
         return m.getNomeMarca().toUpperCase().contains("das couve".toUpperCase());
     }
+
+    @Override
+    public int getQuantidadeDeDadosSalvos() {
+        return this.quantidadeDeDadosAhSeremSalvos;
+    }
+
 }

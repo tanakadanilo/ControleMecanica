@@ -1,44 +1,24 @@
 package modelos.auxiliares;
 
 import java.util.Objects;
+import modelos.DataBase;
 
-public class MarcaVeiculo {
-
-    private static String NomeArquivoDisco = "Marcas.txt";
-    private static String arquivoID = "idGeradoMarcas.txt";
+public class MarcaVeiculo extends DataBase {
 
     private String nomeMarca;
-    private boolean cadastroAtivo = true;
 
     public MarcaVeiculo() {
+        super(3, "MarcaVeiculo.txt", "IdMarcasVeiculos.txt");
+        this.NomeArquivoDisco = "MarcaVeiculo.txt";
+        this.arquivoID = "IdMarcasveiculos.txt";
     }
 
     public MarcaVeiculo(String nomeMarca) {
+        super(3, "MarcaVeiculo.txt", "IdMarcasVeiculos.txt");
+        this.NomeArquivoDisco = "MarcaVeiculo.txt";//   * salvanco nome do arquivo, para uso do banco de dados
+        this.arquivoID = "IdMarcasveiculos.txt";
+
         this.nomeMarca = nomeMarca;
-    }
-
-    public static String getNomeArquivoDisco() {
-        return NomeArquivoDisco;
-    }
-
-    public static void setNomeArquivoDisco(String NomeArquivoDisco) {
-        MarcaVeiculo.NomeArquivoDisco = NomeArquivoDisco;
-    }
-
-    public static String getArquivoID() {
-        return arquivoID;
-    }
-
-    public static void setArquivoID(String arquivoID) {
-        MarcaVeiculo.arquivoID = arquivoID;
-    }
-
-    public boolean isCadastroAtivo() {
-        return cadastroAtivo;
-    }
-
-    public void setCadastroAtivo(boolean cadastroAtivo) {
-        this.cadastroAtivo = cadastroAtivo;
     }
 
     public String getNomeMarca() {

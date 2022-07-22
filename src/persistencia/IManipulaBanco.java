@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelos.DataBase;
+import modelos.auxiliares.MarcaVeiculo;
 import tela.TelaEasterEgg;
 
 /**
@@ -32,7 +33,27 @@ public interface IManipulaBanco<T extends DataBase> {
 
     int getQuantidadeDeDadosSalvos();
 
-    public int getID(T obj) throws InvalidInputException, SystemErrorException;
+    public default int getID(T obj) throws InvalidInputException, SystemErrorException {
+        try {
+            try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {
+                String linha = br.readLine();
+                while (linha != null) {
+                    T v = parse(linha);// * parsing linha
+                    if (v.equals(obj) && v.isCadastroAtivo()) {//  * encontrou
+                        return Integer.parseInt(linha.split(";")[0]);// * retornando o id
+                    }
+                    linha = br.readLine();
+                }
+            }
+        } catch (IOException e) {
+            try {
+                new FileWriter(this.getNomeArquivoDisco()).write("");
+            } catch (IOException ex) {
+                throw new IllegalStateException("falha ao ler e ao criar o arquivo: \"" + this.getNomeArquivoDisco() + "\"");
+            }
+        }
+        return 0;// * objeto não encontrado
+    }
 
     public T parse(String dados) throws SystemErrorException;
 
