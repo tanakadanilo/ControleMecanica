@@ -21,7 +21,7 @@ import modelos.auxiliares.Endereco;
  */
 public class ManipulaBancoPessoaJuridica extends DataBase implements IManipulaBanco<PessoaJuridica> {
 
-    public ManipulaBancoPessoaJuridica(int quantidadeDeDadosNoBanco, String NomeArquivoDisco) {
+    public ManipulaBancoPessoaJuridica() {
         super(8, "ClientePessoaJuridica.txt");
     }
 

@@ -5,6 +5,7 @@
 package modelos;
 
 import enumerations.TipoCliente;
+import exceptions.InvalidInputException;
 import java.util.Objects;
 
 /**
@@ -29,15 +30,15 @@ public class Veiculo extends ExclusaoLogica {
     }
 
     public Veiculo(int idModelo, int idMarca, String chassi, String renavam,
-            String tipoVeiculo, String placa, int anoFabricacao, int anoModelo, int quilometragem, int idDonoVeiculo, TipoCliente tipoCliente) throws Exception {
+            String tipoVeiculo, String placa, int anoFabricacao, int anoModelo, int quilometragem, int idDonoVeiculo, TipoCliente tipoCliente) throws InvalidInputException {
         if (!validaPlaca(placa)) {
-            throw new Exception("A placa: \"" + placa + "\" não é válida");
+            throw new InvalidInputException("A placa: \"" + placa + "\" não é válida");
         }
         if (!validaRenavan(renavam)) {
-            throw new Exception("O renavan: \"" + renavam + "\" não é válido");
+            throw new InvalidInputException("O renavan: \"" + renavam + "\" não é válido");
         }
         if (!validaChassi(chassi)) {
-            throw new Exception("O Chassi: \"" + chassi + "\" não é válido");
+            throw new InvalidInputException("O Chassi: \"" + chassi + "\" não é válido");
         }
 
         this.idModelo = idModelo;

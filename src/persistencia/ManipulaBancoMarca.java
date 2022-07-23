@@ -18,7 +18,7 @@ public class ManipulaBancoMarca extends DataBase implements IManipulaBanco<Marca
 
     MarcaVeiculo marcaVazia = new MarcaVeiculo();
 
-    public ManipulaBancoMarca(int quantidadeDeDadosNoBanco, String NomeArquivoDisco, String arquivoID) {
+    public ManipulaBancoMarca() {
         super(3, "MarcasVeiculos.txt");
     }
 
