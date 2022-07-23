@@ -202,6 +202,7 @@ public interface IManipulaBanco<T extends ExclusaoLogica> {
                     String dados[] = linha.split(";");
                     if (dados.length != this.getQuantidadeDeDadosSalvos()) {//  * achou uma linha com defeito
                         limpaLinha(linha);
+                        throw new SystemErrorException("Os dados: \"" + linha + "\" foram corrompidos e estão sendo apagados");
                     }
                 }
             }

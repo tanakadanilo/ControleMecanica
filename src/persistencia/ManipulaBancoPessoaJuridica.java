@@ -5,8 +5,12 @@
 package persistencia;
 
 import enumerations.EstadosBrazil;
+import exceptions.DataBaseException;
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import modelos.PessoaJuridica;
 import modelos.auxiliares.Endereco;
@@ -15,82 +19,62 @@ import modelos.auxiliares.Endereco;
  *
  * @author ALUNO
  */
-public class ManipulaBancoPessoaJuridica implements IManipulaBanco<PessoaJuridica> {
+public class ManipulaBancoPessoaJuridica extends DataBase implements IManipulaBanco<PessoaJuridica> {
+
+    public ManipulaBancoPessoaJuridica(int quantidadeDeDadosNoBanco, String NomeArquivoDisco) {
+        super(8, "ClientePessoaJuridica.txt");
+    }
 
     @Override
-    public PessoaJuridica parse(String dados) throws Exception {
-        String[] dadosPessoa = dados.split(";");
+    public int getQuantidadeDeDadosSalvos() {
+        return this.quantidadeDeDadosNoBanco;
+    }
+
+    @Override
+    public PessoaJuridica parse(String dados) throws SystemErrorException {
+        try {
+            String[] dadosPessoa = dados.split(";");
 //  * id, nome fantasia, CNPJ, razao social, 
 //  * telefones, email, endereco, cadastro está ativo
 
-        if (dadosPessoa.length != 8) {
-            throw new Exception("Dados incorretos");
-        }
-
-        String[] dadosEndereco = dadosPessoa[6].split(",");
-        if (dadosEndereco.length != 8) {
-            throw new Exception("Dados incorretos, do endereco de pessoa juridica");
-        }
-
-        Endereco endereco = new Endereco(dadosEndereco[0],//    * tipo de logradouro
-                dadosEndereco[1],//    * logradouro
-                dadosEndereco[2],//    * numero
-                dadosEndereco[3],//    * complemento
-                dadosEndereco[4],//    * bairro
-                dadosEndereco[5],//    * cidade
-                Enum.valueOf(EstadosBrazil.class, dadosEndereco[6]),//    * estado, seguindo o Enum
-                dadosEndereco[7]);//    * cep
-
-        PessoaJuridica pj = new PessoaJuridica(dadosPessoa[2],//   * CNPJ
-                dadosPessoa[3],//   * razao social
-                dadosPessoa[1],//   * nome fantasia
-                dadosPessoa[5],//   * email
-                endereco,//   * endereco
-                dadosPessoa[4].substring(1, dadosPessoa[4].length() - 1).split(","));//   * telefones
-        if (dadosPessoa[7].equals(String.valueOf(false))) {//   * caso o cadastro esteja inativo
-            pj.setCadastroAtivo(false);//   * inativar objeto antes de retornar
-        }
-        return pj;
-    }
-
-    @Override
-    public String getNomeDoArquivoNoDisco() {
-        return PessoaJuridica.getNomeArquivoDisco();
-    }
-
-    @Override
-    public int getID(PessoaJuridica obj) throws Exception {
-        try ( BufferedReader br = new BufferedReader(new FileReader(PessoaJuridica.getNomeArquivoDisco()))) {
-            String linha = br.readLine();
-            while (linha != null) {
-                PessoaJuridica p = parse(linha);// * parsing linha
-                if (p.equals(obj) && p.isCadastroAtivo()) {//  * encontrou
-                    return Integer.parseInt(linha.split(";")[0]);// * retornando o id
-                }
-                linha = br.readLine();
+            if (dadosPessoa.length != this.getQuantidadeDeDadosSalvos()) {
+                throw new DataBaseException("Dados incorretos");
             }
+
+            String[] dadosEndereco = dadosPessoa[6].split(",");
+            if (dadosEndereco.length != 8) {
+                throw new DataBaseException("Dados incorretos, do endereco de pessoa juridica");
+
+            }
+
+            Endereco endereco = new Endereco(dadosEndereco[0],//    * tipo de logradouro
+                    dadosEndereco[1],//    * logradouro
+                    dadosEndereco[2],//    * numero
+                    dadosEndereco[3],//    * complemento
+                    dadosEndereco[4],//    * bairro
+                    dadosEndereco[5],//    * cidade
+                    Enum.valueOf(EstadosBrazil.class,
+                            dadosEndereco[6]),//    * estado, seguindo o Enum
+                    dadosEndereco[7]);//    * cep
+
+            PessoaJuridica pj = new PessoaJuridica(dadosPessoa[2],//   * CNPJ
+                    dadosPessoa[3],//   * razao social
+                    dadosPessoa[1],//   * nome fantasia
+                    dadosPessoa[5],//   * email
+                    endereco,//   * endereco
+                    dadosPessoa[4].substring(1, dadosPessoa[4].length() - 1).split(","));//   * telefones
+            if (dadosPessoa[7].equals(String.valueOf(false))) {//   * caso o cadastro esteja inativo
+                pj.setCadastroAtivo(false);//   * inativar objeto antes de retornar
+            }
+            return pj;
+        } catch (DataBaseException | InvalidInputException e) {
+            corrigeBanco();
         }
-        return 0;// * objeto não encontrado
+        throw new IllegalStateException("Tentou corrigir o banco de dadoos após encontrar inconsistencias, mas não foi possível encontrar nenhuma inconsistencia no banco de dados");
     }
 
     @Override
-    public String getNomeArquivoID() {
-        return PessoaJuridica.getArquivoID();
-    }
-
-    @Override
-    public boolean isCadastroAtivo(PessoaJuridica obj) {
-        return obj.isCadastroAtivo();
-    }
-
-    @Override
-    public PessoaJuridica setCadastroAtivo(PessoaJuridica obj, boolean flag) {
-        obj.setCadastroAtivo(flag);
-        return obj;
-    }
-
-    @Override
-    public int buscar(String dado) throws Exception {
+    public int buscar(String dado) throws InvalidInputException, SystemErrorException {
         ArrayList<PessoaJuridica> listaPessoas = buscarTodos();
         for (PessoaJuridica p : listaPessoas) {
             if (p.getCnpj().equals(dado)) {//    * encontrou
@@ -100,7 +84,7 @@ public class ManipulaBancoPessoaJuridica implements IManipulaBanco<PessoaJuridic
         return 0; //    * objeto não encontrado
     }
 
-    public int buscarPorRazaoSocial(String nome) throws Exception {
+    public int buscarPorRazaoSocial(String nome) throws InvalidInputException, SystemErrorException {
         ArrayList<PessoaJuridica> listaPessoas = buscarTodos();
         for (PessoaJuridica p : listaPessoas) {
             if (p.getRazaoSocial().equals(nome)) {//    * encontrou
@@ -109,13 +93,4 @@ public class ManipulaBancoPessoaJuridica implements IManipulaBanco<PessoaJuridic
         }
         return 0; //    * objeto não encontrado
     }
-
-    @Override
-    public boolean ativarEasterEgg(PessoaJuridica obj) {
-        return obj.getEmail().toUpperCase().contains("das couve".toUpperCase())
-                || obj.getEndereco().ativarEasterEgg()
-                || obj.getNomeFantasia().toUpperCase().contains("das couve".toUpperCase())
-                || obj.getRazaoSocial().toUpperCase().contains("das couve".toUpperCase());
-    }
-
 }
