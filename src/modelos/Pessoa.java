@@ -23,7 +23,15 @@ public abstract class Pessoa extends ExclusaoLogica {
             System.out.println(telefone.length);
             System.out.println(Arrays.toString(telefone));
             System.out.println(telefone[0] + "\t" + telefone[1] + "\t" + telefone[2]);
-            throw new InputMismatchException("Telefone inválido");
+            if (!validaTelefone(telefone[0])) {
+                throw new InputMismatchException("O Telefone:\"" + telefone[0] + "\" é inválido");
+            }
+            if (!validaTelefone(telefone[1])) {
+                throw new InputMismatchException("O Telefone:\"" + telefone[1] + "\" é inválido");
+            }
+            if (!validaTelefone(telefone[2])) {
+                throw new InputMismatchException("O Telefone:\"" + telefone[2] + "\" é inválido");
+            }
         }
         if (!validaEmail(email)) {
             throw new InputMismatchException("O email \"" + email + "\" é inválido");

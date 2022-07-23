@@ -25,6 +25,11 @@ public class ManipulaBancoVeiculo extends DataBase implements IManipulaBanco<Vei
     }
 
     @Override
+    public String getNomeArquivoIdDisco() {
+        return this.arquivoID;
+    }
+
+    @Override
     public Veiculo parse(String dados) throws SystemErrorException {
         try {
             String[] dadosVeiculo = dados.split(";");
@@ -77,6 +82,9 @@ public class ManipulaBancoVeiculo extends DataBase implements IManipulaBanco<Vei
     public int getQuantidadeVeiculos(int idDono) throws Exception {
         ArrayList<Veiculo> lista = buscarTodos();
         int quantidade = 0;
+        if (lista == null) {
+            return 0;
+        }
         for (Veiculo v : lista) {
             if (v.getIdDonoVeiculo() == idDono) {
                 quantidade++;

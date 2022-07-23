@@ -126,6 +126,9 @@ public class ManipulaBancoFuncionario extends DataBase implements IManipulaBanco
     public int buscar(String dado, boolean nome) throws InvalidInputException, SystemErrorException {
         ArrayList<Funcionario> listaFunc = buscarTodos();
 
+        if (listaFunc == null) {
+            return 0;// * não existe lista, portanto não achou
+        }
         for (Funcionario f : listaFunc) {
             if (("" + f.getNome()).equals(dado)) {
                 return getID(f);
@@ -142,6 +145,11 @@ public class ManipulaBancoFuncionario extends DataBase implements IManipulaBanco
     @Override
     public int getQuantidadeDeDadosSalvos() {
         return 12;
+    }
+
+    @Override
+    public String getNomeArquivoIdDisco() {
+        return this.arquivoID;
     }
 
 }

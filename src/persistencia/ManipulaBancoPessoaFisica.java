@@ -30,6 +30,11 @@ public class ManipulaBancoPessoaFisica extends DataBase implements IManipulaBanc
     }
 
     @Override
+    public String getNomeArquivoIdDisco() {
+        return this.arquivoID;
+    }
+
+    @Override
     public PessoaFisica parse(String dadosCompletos) throws SystemErrorException {
         try {
             String[] dados = dadosCompletos.split(";");

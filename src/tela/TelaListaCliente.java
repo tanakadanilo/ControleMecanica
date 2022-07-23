@@ -910,16 +910,14 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
             private EstadosBrazil estado;
             private String CEP;*/
             String[] telefone = new String[3];
-            telefone[0] = jFormattedTextFieldTelefoneCelular.getText().trim();//   * apagando espaços em branco
-            if (jFormattedTextFieldTelefoneComercial.getText().replace("(", "").replace(")", "").replace("-", "").trim().equals("")) {//   * caso não tenha informado o telefone comercial
+            telefone[0] = jFormattedTextFieldTelefoneCelular.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");//   * apagando espaços em branco
+            telefone[1] = jFormattedTextFieldTelefoneComercial.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");//   * apagando espaços em branco
+            if (telefone[1].equals("")) {//   * caso não tenha informado o telefone comercial
                 telefone[1] = telefone[0];//    * duplicando o telefone celular
-            } else {//  * informou o  telefone comercial
-                telefone[1] = jFormattedTextFieldTelefoneComercial.getText().replace("(", "").replace(")", "").replace("-", "").trim();//   * apagando espaços em branco
             }
-            if (jFormattedTextFieldTelefoneResidencial.getText().replace("(", "").replace(")", "").replace("-", "").trim().equals("")) {// * caso não tenha informado o telefone residencial
+            telefone[2] = jFormattedTextFieldTelefoneResidencial.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");//   * apagando espaços em branco
+            if (telefone[2].equals("")) {// * caso não tenha informado o telefone residencial
                 telefone[2] = telefone[0];//    * duplicando o telefone celular
-            } else {//  * informou o  telefone residencial
-                telefone[2] = jFormattedTextFieldTelefoneResidencial.getText().trim();//   * apagando espaços em branco
             }
             String tipoLogradouro = tField_TipoLogradouro.getText();
             String logradoro = tField_Logradouro.getText();

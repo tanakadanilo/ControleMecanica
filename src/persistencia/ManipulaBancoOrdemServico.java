@@ -31,6 +31,11 @@ public class ManipulaBancoOrdemServico extends DataBase implements IManipulaBanc
     }
 
     @Override
+    public String getNomeArquivoIdDisco() {
+        return this.arquivoID;
+    }
+
+    @Override
     public OrdemDeServico parse(String dadosCompletos) throws SystemErrorException {
         try {
             String[] dados = dadosCompletos.split(";");

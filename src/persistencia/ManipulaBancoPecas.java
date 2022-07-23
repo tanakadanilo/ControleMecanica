@@ -24,6 +24,11 @@ public class ManipulaBancoPecas extends DataBase implements IManipulaBanco<Peca>
     }
 
     @Override
+    public String getNomeArquivoIdDisco() {
+        return this.arquivoID;
+    }
+
+    @Override
     public Peca parse(String dados) throws SystemErrorException {
         try {
             String[] dadosPeca = dados.split(";");

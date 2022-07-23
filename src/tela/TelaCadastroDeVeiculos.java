@@ -6,6 +6,8 @@
 package tela;
 
 import enumerations.TipoCliente;
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -36,25 +38,30 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
      * Creates new form TelaCadastroDeVeiculos
      */
     public TelaCadastroDeVeiculos() {
-        initComponents();
-        loadComboBoxModelos();
-        jComboBoxModelos.setVisible(false);
-        loadComboBoxMarcas();
-        loadTableClientes();
-        jTextFieldMarca.setVisible(false);
-        jTextFieldModelo.setVisible(false);
-        jTextFieldDonoDoVeiculo.setEditable(false);
-        jTextFieldMarca.setEditable(false);
-        jTextFieldModelo.setEditable(false);
-        jButtonCadastrarVeiculo.setVisible(true);
+        try {
+            initComponents();
+            loadComboBoxModelos();
+            jComboBoxModelos.setVisible(false);
+            loadComboBoxMarcas();
+            loadTableClientes();
+            jTextFieldMarca.setVisible(false);
+            jTextFieldModelo.setVisible(false);
+            jTextFieldDonoDoVeiculo.setEditable(false);
+            jTextFieldMarca.setEditable(false);
+            jTextFieldModelo.setEditable(false);
+            jButtonCadastrarVeiculo.setVisible(true);
 
-        jRadioButtonPessoaFisica.setEnabled(false);
-        jRadioButtonPessoaJuridica.setEnabled(false);
+            jRadioButtonPessoaFisica.setEnabled(false);
+            jRadioButtonPessoaJuridica.setEnabled(false);
 
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jTabelaClientes.getModel());
-        jTabelaClientes.setRowSorter(sorter);
-        this.requestFocus();
-        loadTableVeiculos();
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTabelaClientes.getModel());
+            jTabelaClientes.setRowSorter(sorter);
+            loadTableVeiculos();
+            this.requestFocus();
+        } catch (InvalidInputException | SystemErrorException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
     }
 
     private void loadTableVeiculos() {
@@ -1039,18 +1046,17 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
         }
     }
 
-    private void loadComboBoxMarcas() {
-        try {
-            ArrayList<MarcaVeiculo> listaModelos = new ManipulaBancoMarca().buscarTodos();
-            String[] nomeModelos = new String[listaModelos.size() + 1];
-            nomeModelos[0] = "--Marcas--";
-            for (int i = 0; i < listaModelos.size(); i++) {
-                nomeModelos[i + 1] = listaModelos.get(i).getNomeMarca();
-            }
-            jComboBoxMarcas.setModel(new DefaultComboBoxModel<>(nomeModelos));
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void loadComboBoxMarcas() throws InvalidInputException, SystemErrorException {
+        ArrayList<MarcaVeiculo> listaModelos = new ManipulaBancoMarca().buscarTodos();
+        if (listaModelos == null) {
+            return;
         }
+        String[] nomeModelos = new String[listaModelos.size() + 1];
+        nomeModelos[0] = "--Marcas--";
+        for (int i = 0; i < listaModelos.size(); i++) {
+            nomeModelos[i + 1] = listaModelos.get(i).getNomeMarca();
+        }
+        jComboBoxMarcas.setModel(new DefaultComboBoxModel<>(nomeModelos));
     }
 
     private void loadTableClientes() {

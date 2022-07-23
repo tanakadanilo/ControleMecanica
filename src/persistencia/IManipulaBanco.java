@@ -29,6 +29,8 @@ public interface IManipulaBanco<T extends ExclusaoLogica> {
 
     String getNomeArquivoDisco();
 
+    String getNomeArquivoIdDisco();
+
     int getQuantidadeDeDadosSalvos();
 
     public default int getID(T obj) throws InvalidInputException, SystemErrorException {
@@ -65,7 +67,7 @@ public interface IManipulaBanco<T extends ExclusaoLogica> {
             }
         }
         try ( BufferedWriter bw = new BufferedWriter(new FileWriter(this.getNomeArquivoDisco(), true))) {
-            int id = GeradorId.getID(this.getNomeArquivoDisco());
+            int id = GeradorId.getID(this.getNomeArquivoIdDisco());
             bw.write(id + ";" + obj.toString() + "\n");
         }
     }

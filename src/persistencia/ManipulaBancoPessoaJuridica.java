@@ -26,6 +26,11 @@ public class ManipulaBancoPessoaJuridica extends DataBase implements IManipulaBa
     }
 
     @Override
+    public String getNomeArquivoIdDisco() {
+        return this.arquivoID;
+    }
+
+    @Override
     public int getQuantidadeDeDadosSalvos() {
         return this.quantidadeDeDadosNoBanco;
     }

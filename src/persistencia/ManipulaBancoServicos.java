@@ -23,6 +23,11 @@ public class ManipulaBancoServicos extends DataBase implements IManipulaBanco<Se
     }
 
     @Override
+    public String getNomeArquivoIdDisco() {
+        return this.arquivoID;
+    }
+
+    @Override
     public Servico parse(String dados) throws SystemErrorException {
         try {
             String[] dadosServico = dados.split(";");

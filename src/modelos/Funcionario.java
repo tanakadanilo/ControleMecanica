@@ -19,7 +19,8 @@ public class Funcionario extends PessoaFisica {
     private int matricula;
 
     public Funcionario() {
-        super("emailNaoInformado@email.com", new Endereco());
+
+        super("emailNaoInformado@email.com", new Endereco(), "99999999999", "99999999999", "99999999999");
     }
 
     public Funcionario(String especialidade, double salarioMensal, double salariohora, int matricula, String nome, String cpf, Date dataNascimento, String email, Endereco endereco, String... telefone) {

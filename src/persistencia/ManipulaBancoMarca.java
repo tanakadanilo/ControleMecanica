@@ -16,10 +16,13 @@ import modelos.auxiliares.MarcaVeiculo;
  */
 public class ManipulaBancoMarca extends DataBase implements IManipulaBanco<MarcaVeiculo> {
 
-    MarcaVeiculo marcaVazia = new MarcaVeiculo();
-
     public ManipulaBancoMarca() {
         super(3, "MarcasVeiculos.txt");
+    }
+
+    @Override
+    public String getNomeArquivoIdDisco() {
+        return this.arquivoID;
     }
 
     @Override

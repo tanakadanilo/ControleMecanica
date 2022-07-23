@@ -5,7 +5,10 @@
  */
 package tela;
 
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
 import java.awt.Dimension;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,6 +73,9 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
             ManipulaBancoPessoaJuridica mbPj = new ManipulaBancoPessoaJuridica();
             ManipulaBancoMarca mbMarca = new ManipulaBancoMarca();
             ManipulaBancoModelos mbModelo = new ManipulaBancoModelos();
+            if (listaVeiculos == null) {
+                return;
+            }
             for (Veiculo v : listaVeiculos) {
                 if (v.getPlaca().contains(busca)) {//   * filtrando a busca
                     MarcaVeiculo marca = mbMarca.buscar(v.getIdMarca());
@@ -93,13 +99,13 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
                     }
                 }
             }
-            
+
             TableRowSorter<TableModel> sorterPecas = new TableRowSorter<TableModel>(jTablePecas.getModel());
             jTablePecas.setRowSorter(sorterPecas);
-            
+
             TableRowSorter<TableModel> sorterServicos = new TableRowSorter<TableModel>(jTableServicos.getModel());
             jTableServicos.setRowSorter(sorterServicos);
-            
+
             TableRowSorter<TableModel> sorterVeiculo = new TableRowSorter<TableModel>(jTableVeiculos.getModel());
             jTableVeiculos.setRowSorter(sorterVeiculo);
 
@@ -130,14 +136,19 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
         try {
             ArrayList<Funcionario> listaFunc = new ManipulaBancoFuncionario().buscarTodos();
             ArrayList<String> listaNomesFuncionarios = new ArrayList();
+            if (listaFunc == null) {
+                return;//   * não tem nada pra mostrar na lista
+            }
             for (Funcionario f : listaFunc) {
                 listaNomesFuncionarios.add(f.getNome());
             }
 
             jComboBox1.setModel(new DefaultComboBoxModel(listaNomesFuncionarios.toArray()));
-        } catch (Exception e) {
+        } catch (InvalidInputException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (SystemErrorException e) {
+            JOptionPane.showMessageDialog(rootPane, "erro do sistema, implementação incompleta");
         }
 
     }
@@ -516,8 +527,12 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
         try {
             int idFuncionario = new ManipulaBancoFuncionario().buscar("" + jComboBox1.getSelectedItem(), true);
             Funcionario f = new ManipulaBancoFuncionario().buscar(idFuncionario);
+            if (f == null) {
+                jLabelEspecialidadeFuncionario.setText("");
+                return;//   * não existe funcionário pra mostrar 
+            }
             jLabelEspecialidadeFuncionario.setText(f.getEspecialidade());
-        } catch (Exception e) {
+        } catch (InvalidInputException | SystemErrorException | IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, e.getMessage());
         }
