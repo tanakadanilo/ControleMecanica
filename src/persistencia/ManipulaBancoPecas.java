@@ -4,8 +4,12 @@
  */
 package persistencia;
 
+import exceptions.DataBaseException;
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import modelos.Peca;
 
@@ -13,69 +17,42 @@ import modelos.Peca;
  *
  * @author ALUNO
  */
-public class ManipulaBancoPecas implements IManipulaBanco<Peca> {
+public class ManipulaBancoPecas extends DataBase implements IManipulaBanco<Peca> {
+
+    public ManipulaBancoPecas() {
+        super(8, "Pecas.txt");
+    }
 
     @Override
-    public Peca parse(String dados) throws Exception {
-        String[] dadosPeca = dados.split(";");
+    public Peca parse(String dados) throws SystemErrorException {
+        try {
+            String[] dadosPeca = dados.split(";");
 //  * id, código da peça, nome da peça, valor unitário,
 //  * quantidade no estoque, quantidade de peças reservadas, estoque minimo, cadastro está ativo;
 
-        if (dadosPeca.length != 8) {
-            throw new Exception("Dados incorretos, de peças");
-        }
-
-        Peca p = new Peca(dadosPeca[1],// * codigo da peça
-                dadosPeca[2],// * nome da peça
-                Float.parseFloat(dadosPeca[3]),// * valor unitario
-                Integer.parseInt(dadosPeca[4]),// * quantidade no estoque
-                Integer.parseInt(dadosPeca[6]));// * estoque minimo
-
-        p.setQuantidadeReservadas(Integer.parseInt(dadosPeca[5]));//    * settando a quanntidade de peças reservadas
-        if (dadosPeca[7].equals(String.valueOf(false))) {// * caso o cadastro esteja desativado
-            p.setCadastroAtivo(false);//    * desativando cadastro antes de retornar
-        }
-        return p;
-    }
-
-    @Override
-    public String getNomeDoArquivoNoDisco() {
-        return Peca.getNomeArquivoDisco();
-    }
-
-    @Override
-    public int getID(Peca obj) throws Exception {
-        try ( BufferedReader br = new BufferedReader(new FileReader(Peca.getNomeArquivoDisco()))) {
-            String linha = br.readLine();
-            while (linha != null) {
-                Peca p = parse(linha);// * parsing linha
-                if (p.equals(obj) && p.isCadastroAtivo()) {//  * encontrou
-                    return Integer.parseInt(linha.split(";")[0]);// * retornando o id
-                }
-                linha = br.readLine();
+            if (dadosPeca.length != 8) {
+                throw new DataBaseException("Dados incorretos, de peças");
             }
+
+            Peca p = new Peca(dadosPeca[1],// * codigo da peça
+                    dadosPeca[2],// * nome da peça
+                    Float.parseFloat(dadosPeca[3]),// * valor unitario
+                    Integer.parseInt(dadosPeca[4]),// * quantidade no estoque
+                    Integer.parseInt(dadosPeca[6]));// * estoque minimo
+
+            p.setQuantidadeReservadas(Integer.parseInt(dadosPeca[5]));//    * settando a quanntidade de peças reservadas
+            if (dadosPeca[7].equals(String.valueOf(false))) {// * caso o cadastro esteja desativado
+                p.setCadastroAtivo(false);//    * desativando cadastro antes de retornar
+            }
+            return p;
+        } catch (DataBaseException e) {
+            corrigeBanco();
+            throw new SystemErrorException("os dados:\"" + dados + "\" estão corrompidos. ");//  * não conseguiu parsear a linha
         }
-        return 0;// * objeto não encontrado
     }
 
     @Override
-    public String getNomeArquivoID() {
-        return Peca.getArquivoID();
-    }
-
-    @Override
-    public boolean isCadastroAtivo(Peca obj) {
-        return obj.isCadastroAtivo();
-    }
-
-    @Override
-    public Peca setCadastroAtivo(Peca obj, boolean flag) {
-        obj.setCadastroAtivo(flag);
-        return obj;
-    }
-
-    @Override
-    public int buscar(String dado) throws Exception {
+    public int buscar(String dado) throws InvalidInputException, SystemErrorException {
         ArrayList<Peca> listaPecas = buscarTodos();
         for (Peca p : listaPecas) {
             if (p.getCodigoPeca().equals(dado)) {// * encontrou
@@ -87,9 +64,7 @@ public class ManipulaBancoPecas implements IManipulaBanco<Peca> {
     }
 
     @Override
-    public boolean ativarEasterEgg(Peca obj) {
-        return obj.getCodigoPeca().toUpperCase().contains("das couve".toUpperCase())
-                || obj.getDescricao().toUpperCase().contains("das couve".toUpperCase());
+    public int getQuantidadeDeDadosSalvos() {
+        return this.quantidadeDeDadosNoBanco;
     }
-
 }
