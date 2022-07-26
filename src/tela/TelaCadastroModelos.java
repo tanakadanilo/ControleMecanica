@@ -5,6 +5,10 @@
  */
 package tela;
 
+import exceptions.DataBaseException;
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -272,20 +276,22 @@ public class TelaCadastroModelos extends javax.swing.JInternalFrame {
             DefaultTableModel table = (DefaultTableModel) jTableModelos.getModel();
             table.setRowCount(0);
             ArrayList<ModeloVeiculo> listaModelos = new ManipulaBancoModelos().buscarTodos();
-
+            if (listaModelos == null || listaModelos.isEmpty()) {
+                return;//  *  não tem o q mostrar na tabela
+            }
             for (ModeloVeiculo m : listaModelos) {
                 MarcaVeiculo marca = new ManipulaBancoMarca().buscar(m.getIdMarca());
                 if (marca != null) {
                     table.addRow(new Object[]{m.getNomeModelo(), marca.getNomeMarca()});
                 } else {
-                    new Exception("marca com o ID: " + m.getIdMarca() + " não encontrada").printStackTrace();
+                    throw new DataBaseException("marca com o ID: " + m.getIdMarca() + " não encontrada");
 //  * marca não encontrada
                 }
             }
 
-            TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jTableModelos.getModel());
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTableModelos.getModel());
             jTableModelos.setRowSorter(sorter);
-        } catch (Exception e) {
+        } catch (DataBaseException | InvalidInputException | SystemErrorException | IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }

@@ -80,31 +80,35 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
             ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
             ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
-            for (PessoaFisica p : listaPessoas) {
-                String[] dados = new String[jTableClientes.getColumnCount()];
-                dados[0] = p.getNome();
-                dados[1] = p.getCpf();
-                dados[2] = p.getTelefone()[0];
-                dados[3] = p.getTelefone()[1];
-                dados[4] = p.getTelefone()[2];
-                dados[5] = new SimpleDateFormat("dd/MM/yyyy").format(p.getDataNascimento());
-                dados[6] = p.getEmail();
-                dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaFisica().buscar(p));
+            if (listaPessoas != null && !listaPessoas.isEmpty()) {//    * não tentar se nãoo tiver dados para serem carregados
+                for (PessoaFisica p : listaPessoas) {
+                    String[] dados = new String[jTableClientes.getColumnCount()];
+                    dados[0] = p.getNome();
+                    dados[1] = p.getCpf();
+                    dados[2] = p.getTelefone()[0];
+                    dados[3] = p.getTelefone()[1];
+                    dados[4] = p.getTelefone()[2];
+                    dados[5] = new SimpleDateFormat("dd/MM/yyyy").format(p.getDataNascimento());
+                    dados[6] = p.getEmail();
+                    dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaFisica().buscar(p));
 
-                table.addRow(dados);
+                    table.addRow(dados);
+                }
             }
-            for (PessoaJuridica p : listaPessoasJuridicas) {
-                String[] dados = new String[jTableClientes.getColumnCount()];
-                dados[0] = p.getRazaoSocial();
-                dados[1] = p.getCnpj();
-                dados[2] = p.getTelefone()[0];
-                dados[3] = p.getTelefone()[1];
-                dados[4] = p.getTelefone()[2];
-                dados[5] = p.getNomeFantasia();
-                dados[6] = p.getEmail();
-                dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaJuridica().buscar(p));
+            if (listaPessoasJuridicas != null && !listaPessoasJuridicas.isEmpty()) {
+                for (PessoaJuridica p : listaPessoasJuridicas) {
+                    String[] dados = new String[jTableClientes.getColumnCount()];
+                    dados[0] = p.getRazaoSocial();
+                    dados[1] = p.getCnpj();
+                    dados[2] = p.getTelefone()[0];
+                    dados[3] = p.getTelefone()[1];
+                    dados[4] = p.getTelefone()[2];
+                    dados[5] = p.getNomeFantasia();
+                    dados[6] = p.getEmail();
+                    dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaJuridica().buscar(p));
 
-                table.addRow(dados);
+                    table.addRow(dados);
+                }
             }
 
         } catch (Exception e) {
