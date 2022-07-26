@@ -27,7 +27,7 @@ import modelos.Peca;
 public class ManipulaBancoOrdemServico extends DataBase implements IManipulaBanco<OrdemDeServico> {
 
     public ManipulaBancoOrdemServico() {
-        super(15, "Funcionarios.txt");
+        super(15, "OrdensDeServicos.txt");
     }
 
     @Override

@@ -12,7 +12,7 @@ import modelos.auxiliares.ModeloVeiculo;
 public class ManipulaBancoModelos extends DataBase implements IManipulaBanco<ModeloVeiculo> {
 
     public ManipulaBancoModelos() {
-        super(4, "ModeloVeiculos.txt");
+        super(4, "ModelosVeiculos.txt");
     }
     @Override
     public String getNomeArquivoIdDisco() {

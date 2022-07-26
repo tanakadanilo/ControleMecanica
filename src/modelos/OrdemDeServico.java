@@ -18,7 +18,7 @@ public class OrdemDeServico extends ExclusaoLogica {
         EM_ABERTO, EM_EXECUCAO, CONCLUIDA, CANCELADA;
     }
 
-    private final static String NOME_ARQUIVO_CODIGO_OS = "CodigoOrdensDeServico.txt";
+    private final static String NOME_ARQUIVO_CODIGO_OS = "CodigoOrdensDeServicos.txt";
 
     private int codigo;
     private String defeitoRelatado;
