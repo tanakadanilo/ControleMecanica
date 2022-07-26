@@ -315,6 +315,12 @@ public class TelaListaFuncionario extends javax.swing.JInternalFrame {
             ex.printStackTrace();
         }
 
+        try {
+            jFormatedField_cep.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#####-###")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -636,7 +642,7 @@ public class TelaListaFuncionario extends javax.swing.JInternalFrame {
                         listaFiltrada = filtrarPorCPF(listaFunc, tField_cpf.getText());
                         break;
                     case 2://   * matricula
-                        listaFiltrada = filtrarPorMatricula(listaFunc, jFormattedTextFieldMatricula.getText());
+                        listaFiltrada = filtrarPorMatricula(listaFunc, jFormattedTextFieldMatricula.getText().replace(".", ""));
                         break;
                     case 3://   * especialidade
                         listaFiltrada = filtrarPorEspecialidade(listaFunc, jTextFieldEspecialidade.getText());
