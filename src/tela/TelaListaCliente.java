@@ -475,8 +475,8 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
             }
         });
         jTableClientes.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTableClientesMouseClicked(evt);
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTableClientesMouseReleased(evt);
             }
         });
         jScrollPane1.setViewportView(jTableClientes);
@@ -959,7 +959,23 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
-    private void jTableClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableClientesMouseClicked
+    private void jButtonFiltrarNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFiltrarNomeActionPerformed
+        if (jRadioButton_PessoaFisica.isSelected()) {
+            loadTableClientes(tField_nome_razaoSocial.getText(), operacaoBusca.NOME);
+        } else if (jRadioButton_PessoaJuridica.isSelected()) {
+            loadTableClientes(tField_nome_razaoSocial.getText(), operacaoBusca.RAZAO_SOCIAL);
+        }
+    }//GEN-LAST:event_jButtonFiltrarNomeActionPerformed
+
+    private void jButtonFiltrarNome1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFiltrarNome1ActionPerformed
+        if (jRadioButton_PessoaFisica.isSelected()) {
+            loadTableClientes(jFormattedTextFieldCpf.getText(), operacaoBusca.CPF);
+        } else if (jRadioButton_PessoaJuridica.isSelected()) {
+            loadTableClientes(jFormattedTextFieldCnpj.getText(), operacaoBusca.CNPJ);
+        }
+    }//GEN-LAST:event_jButtonFiltrarNome1ActionPerformed
+
+    private void jTableClientesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableClientesMouseReleased
         try {
             int indexSelecionado = jTableClientes.getSelectedRow();
             if (indexSelecionado >= 0) {//   * o clique foi válido
@@ -1019,24 +1035,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, e.getMessage());
-        }
-    }//GEN-LAST:event_jTableClientesMouseClicked
-
-    private void jButtonFiltrarNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFiltrarNomeActionPerformed
-        if (jRadioButton_PessoaFisica.isSelected()) {
-            loadTableClientes(tField_nome_razaoSocial.getText(), operacaoBusca.NOME);
-        } else if (jRadioButton_PessoaJuridica.isSelected()) {
-            loadTableClientes(tField_nome_razaoSocial.getText(), operacaoBusca.RAZAO_SOCIAL);
-        }
-    }//GEN-LAST:event_jButtonFiltrarNomeActionPerformed
-
-    private void jButtonFiltrarNome1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFiltrarNome1ActionPerformed
-        if (jRadioButton_PessoaFisica.isSelected()) {
-            loadTableClientes(jFormattedTextFieldCpf.getText(), operacaoBusca.CPF);
-        } else if (jRadioButton_PessoaJuridica.isSelected()) {
-            loadTableClientes(jFormattedTextFieldCnpj.getText(), operacaoBusca.CNPJ);
-        }
-    }//GEN-LAST:event_jButtonFiltrarNome1ActionPerformed
+        }    }//GEN-LAST:event_jTableClientesMouseReleased
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

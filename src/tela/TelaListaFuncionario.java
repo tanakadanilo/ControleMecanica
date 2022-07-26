@@ -515,7 +515,7 @@ public class TelaListaFuncionario extends javax.swing.JInternalFrame {
         try {
             int indexSelecionado = jTableFuncionarios.getSelectedRow();
             if (indexSelecionado < 0) {
-                throw new Exception("Selecione, na tabela, qual funcionario deseja editar");
+                throw new InvalidInputException("Selecione, na tabela, qual funcionario deseja editar");
             }
             String matricula = "" + jTableFuncionarios.getValueAt(jTableFuncionarios.getSelectedRow(), 0);
             int id = new ManipulaBancoFuncionario().buscar(matricula);
