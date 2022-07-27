@@ -1,0 +1,1024 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
+ */
+package tela.lixeira;
+
+import enumerations.EstadosBrazil;
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelos.PessoaFisica;
+import modelos.PessoaJuridica;
+import modelos.auxiliares.Endereco;
+import persistencia.ManipulaBancoPessoaFisica;
+import persistencia.ManipulaBancoPessoaJuridica;
+import persistencia.ManipulaBancoVeiculo;
+import tela.TelaListaCliente.operacaoBusca;
+
+/**
+ *
+ * @author tanak
+ */
+public class TelaClientesExcluidos extends javax.swing.JInternalFrame {
+
+    /**
+     * Creates new form TelaClientesExcluidos
+     */
+    public TelaClientesExcluidos() {
+        initComponents();
+        loadTableClientes();
+    }
+
+    private void loadTableClientes() {
+        try {
+            DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
+            table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodosRemovidos();
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodosRemovidos();
+            if (listaPessoas != null && !listaPessoas.isEmpty()) {//    * não tentar se nãoo tiver dados para serem carregados
+                for (PessoaFisica p : listaPessoas) {
+                    String[] dados = new String[jTableClientes.getColumnCount()];
+                    dados[0] = p.getNome();
+                    dados[1] = p.getCpf();
+                    dados[2] = p.getTelefone()[0];
+                    dados[3] = p.getTelefone()[1];
+                    dados[4] = p.getTelefone()[2];
+                    dados[5] = new SimpleDateFormat("dd/MM/yyyy").format(p.getDataNascimento());
+                    dados[6] = p.getEmail();
+                    dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaFisica().buscar(p));
+
+                    table.addRow(dados);
+                }
+            }
+            if (listaPessoasJuridicas != null && !listaPessoasJuridicas.isEmpty()) {
+                for (PessoaJuridica p : listaPessoasJuridicas) {
+                    String[] dados = new String[jTableClientes.getColumnCount()];
+                    dados[0] = p.getRazaoSocial();
+                    dados[1] = p.getCnpj();
+                    dados[2] = p.getTelefone()[0];
+                    dados[3] = p.getTelefone()[1];
+                    dados[4] = p.getTelefone()[2];
+                    dados[5] = p.getNomeFantasia();
+                    dados[6] = p.getEmail();
+                    dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaJuridica().buscar(p));
+
+                    table.addRow(dados);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+
+    private void loadTableClientes(String filtro, operacaoBusca op) {
+        try {
+            switch (op) {
+                case NOME:
+                    filtraTabelaNome(filtro);
+                    break;
+                case RAZAO_SOCIAL:
+                    filtraTabelaRazaoSocial(filtro);
+                    break;
+                case CNPJ:
+                    filtraTabelaCnpj(filtro);
+                    break;
+                case CPF:
+                    filtraTabelaCpf(filtro);
+                    break;
+                case PESSOA_FISICA:
+                    filtraTabelaPessoaFisica();
+                    break;
+                case PESSOA_JURIDICA:
+                    filtraTabelaPessoajuridica();
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+
+    private void filtraTabelaNome(String nome) {
+        try {
+            DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
+            table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
+            if (listaPessoas != null) {
+                for (PessoaFisica p : listaPessoas) {
+                    if (p.getNome().toUpperCase().contains(nome.toUpperCase())) {
+                        String[] dados = new String[jTableClientes.getColumnCount()];
+                        dados[0] = p.getNome();
+                        dados[1] = p.getCpf();
+                        dados[2] = p.getTelefone()[0];
+                        dados[3] = p.getTelefone()[1];
+                        dados[4] = p.getTelefone()[2];
+                        dados[5] = new SimpleDateFormat("dd/MM/yyyy").format(p.getDataNascimento());
+                        dados[6] = p.getEmail();
+                        dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaFisica().buscar(p));
+
+                        table.addRow(dados);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+
+    private void filtraTabelaRazaoSocial(String razaoSocial) {
+        try {
+            DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
+            table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+            if (listaPessoasJuridicas == null) {
+                return;
+            }
+            for (PessoaJuridica p : listaPessoasJuridicas) {
+                if (p.getRazaoSocial().toUpperCase().contains(razaoSocial.toUpperCase())) {
+
+                    String[] dados = new String[jTableClientes.getColumnCount()];
+                    dados[0] = p.getRazaoSocial();
+                    dados[1] = p.getCnpj();
+                    dados[2] = p.getTelefone()[0];
+                    dados[3] = p.getTelefone()[1];
+                    dados[4] = p.getTelefone()[2];
+                    dados[5] = p.getNomeFantasia();
+                    dados[6] = p.getEmail();
+                    dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaJuridica().buscar(p));
+
+                    table.addRow(dados);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+
+    private void filtraTabelaCpf(String cpf) {
+        try {
+            DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
+            table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
+            if (listaPessoas != null) {
+                for (PessoaFisica p : listaPessoas) {
+                    if (p.getCpf().toUpperCase().contains(cpf)) {
+                        String[] dados = new String[jTableClientes.getColumnCount()];
+                        dados[0] = p.getNome();
+                        dados[1] = p.getCpf();
+                        dados[2] = p.getTelefone()[0];
+                        dados[3] = p.getTelefone()[1];
+                        dados[4] = p.getTelefone()[2];
+                        dados[5] = new SimpleDateFormat("dd/MM/yyyy").format(p.getDataNascimento());
+                        dados[6] = p.getEmail();
+                        dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaFisica().buscar(p));
+
+                        table.addRow(dados);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+
+    private void filtraTabelaCnpj(String cnpj) {
+        try {
+            System.out.println(cnpj.replace(".", "").replace(" ", "").replace("/", "").replace("-", ""));
+            DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
+            table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+            if (listaPessoasJuridicas == null) {
+                return;
+            }
+            for (PessoaJuridica p : listaPessoasJuridicas) {
+                if (p.getCnpj().contains(cnpj)) {
+
+                    String[] dados = new String[jTableClientes.getColumnCount()];
+                    dados[0] = p.getRazaoSocial();
+                    dados[1] = p.getCnpj();
+                    dados[2] = p.getTelefone()[0];
+                    dados[3] = p.getTelefone()[1];
+                    dados[4] = p.getTelefone()[2];
+                    dados[5] = p.getNomeFantasia();
+                    dados[6] = p.getEmail();
+                    dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaJuridica().buscar(p));
+
+                    table.addRow(dados);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+
+    private void filtraTabelaPessoaFisica() {
+        try {
+            DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
+            table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
+            if (listaPessoas != null) {
+                for (PessoaFisica p : listaPessoas) {
+                    String[] dados = new String[jTableClientes.getColumnCount()];
+                    dados[0] = p.getNome();
+                    dados[1] = p.getCpf();
+                    dados[2] = p.getTelefone()[0];
+                    dados[3] = p.getTelefone()[1];
+                    dados[4] = p.getTelefone()[2];
+                    dados[5] = new SimpleDateFormat("dd/MM/yyyy").format(p.getDataNascimento());
+                    dados[6] = p.getEmail();
+                    dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaFisica().buscar(p));
+
+                    table.addRow(dados);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+
+    private void filtraTabelaPessoajuridica() {
+        try {
+            DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
+            table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+            if (listaPessoasJuridicas == null) {
+                return;
+            }
+            for (PessoaJuridica p : listaPessoasJuridicas) {
+
+                String[] dados = new String[jTableClientes.getColumnCount()];
+                dados[0] = p.getRazaoSocial();
+                dados[1] = p.getCnpj();
+                dados[2] = p.getTelefone()[0];
+                dados[3] = p.getTelefone()[1];
+                dados[4] = p.getTelefone()[2];
+                dados[5] = p.getNomeFantasia();
+                dados[6] = p.getEmail();
+                dados[7] = "" + new ManipulaBancoVeiculo().getQuantidadeVeiculos(new ManipulaBancoPessoaJuridica().buscar(p));
+
+                table.addRow(dados);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel9 = new javax.swing.JLabel();
+        jLabelDataNasc_NomeFantasia = new javax.swing.JLabel();
+        tField_nome_razaoSocial = new javax.swing.JTextField();
+        tField_Complemento = new javax.swing.JTextField();
+        tField_TipoLogradouro = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableClientes = new javax.swing.JTable();
+        jLabel11 = new javax.swing.JLabel();
+        tField_Bairro = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        tField_Cidade = new javax.swing.JTextField();
+        tField_email = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        tField_nomeFantasia = new javax.swing.JTextField();
+        cb_Estado = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        jFormattedTextFieldCpf = new javax.swing.JFormattedTextField();
+        tField_Logradouro = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jButtonEditar = new javax.swing.JButton();
+        jFormattedTextFieldCnpj = new javax.swing.JFormattedTextField();
+        tField_Numero = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jButtonRemover = new javax.swing.JButton();
+        jFormattedTextFieldDataNascimento = new javax.swing.JFormattedTextField();
+        jLabelNome_razaoSocial = new javax.swing.JLabel();
+        jFormattedTextFieldCep = new javax.swing.JFormattedTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jFormattedTextFieldTelefoneResidencial = new javax.swing.JFormattedTextField();
+        jRadioButton_PessoaFisica = new javax.swing.JRadioButton();
+        jFormattedTextFieldTelefoneComercial = new javax.swing.JFormattedTextField();
+        jLabel_CPF_CNPJ = new javax.swing.JLabel();
+        jFormattedTextFieldTelefoneCelular = new javax.swing.JFormattedTextField();
+        jRadioButton_PessoaJuridica = new javax.swing.JRadioButton();
+        jButtonFiltrarNome = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jButtonFiltrarNome1 = new javax.swing.JButton();
+        jButtonAdicionar = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+
+        jLabel9.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel9.setText("Complemento:");
+
+        jLabelDataNasc_NomeFantasia.setText("Data nascimento");
+
+        jLabel10.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel10.setText("Bairro:");
+
+        jTableClientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jTableClientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nome/Razão social", "CPF/CNPJ", "Celular", "Telefone Comercial", "Telefone fixo", "Data de Nascimento/Nome social", "E-mail", "Quantidade de veiculos"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTableClientesMouseReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableClientes);
+
+        jLabel11.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel11.setText("Cidade:");
+
+        jLabel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel5.setText("Email:");
+
+        jLabel12.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel12.setText("Estado:");
+
+        cb_Estado.setAutoscrolls(true);
+        cb_Estado.setPreferredSize(new java.awt.Dimension(7, 22));
+
+        jLabel7.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel7.setText("Logradouro");
+
+        try {
+            jFormattedTextFieldCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabel13.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel13.setText("CEP:");
+
+        jButtonEditar.setBackground(new java.awt.Color(0, 204, 255));
+        jButtonEditar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jButtonEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-lápis-30.png"))); // NOI18N
+        jButtonEditar.setText("Editar");
+        jButtonEditar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditarActionPerformed(evt);
+            }
+        });
+
+        try {
+            jFormattedTextFieldCnpj.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###/####-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabel14.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel14.setText("Residencial:");
+
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel8.setText("Nº:");
+
+        jButtonRemover.setBackground(new java.awt.Color(0, 204, 255));
+        jButtonRemover.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jButtonRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-excluir-30.png"))); // NOI18N
+        jButtonRemover.setText("Remover");
+        jButtonRemover.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverActionPerformed(evt);
+            }
+        });
+
+        try {
+            jFormattedTextFieldDataNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabelNome_razaoSocial.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabelNome_razaoSocial.setText("Nome: ");
+
+        try {
+            jFormattedTextFieldCep.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#####-###")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabel15.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel15.setText("Comercial:");
+
+        try {
+            jFormattedTextFieldTelefoneResidencial.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) #####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jRadioButton_PessoaFisica.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jRadioButton_PessoaFisica.setText("Pessoa Fisica");
+        jRadioButton_PessoaFisica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton_PessoaFisicaActionPerformed(evt);
+            }
+        });
+
+        try {
+            jFormattedTextFieldTelefoneComercial.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) #####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabel_CPF_CNPJ.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel_CPF_CNPJ.setText("CPF: ");
+
+        try {
+            jFormattedTextFieldTelefoneCelular.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) #####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jRadioButton_PessoaJuridica.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jRadioButton_PessoaJuridica.setText("Pessoa Juridica");
+        jRadioButton_PessoaJuridica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton_PessoaJuridicaActionPerformed(evt);
+            }
+        });
+
+        jButtonFiltrarNome.setText("Pesquisar");
+        jButtonFiltrarNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFiltrarNomeActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel3.setText("Celular:");
+
+        jButtonFiltrarNome1.setText("Pesquisar");
+        jButtonFiltrarNome1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFiltrarNome1ActionPerformed(evt);
+            }
+        });
+
+        jButtonAdicionar.setBackground(new java.awt.Color(0, 204, 255));
+        jButtonAdicionar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jButtonAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-mais-2-matemática-verde-30.png"))); // NOI18N
+        jButtonAdicionar.setText("Adicionar");
+        jButtonAdicionar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdicionarActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel4.setText("Tipo Logradouro:");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelNome_razaoSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(22, 22, 22)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tField_nome_razaoSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(7, 7, 7)
+                                        .addComponent(jButtonFiltrarNome))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jFormattedTextFieldTelefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(5, 5, 5)
+                                        .addComponent(jLabel14)
+                                        .addGap(5, 5, 5)
+                                        .addComponent(jFormattedTextFieldTelefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(33, 33, 33)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel_CPF_CNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel15))
+                                .addGap(25, 25, 25)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jFormattedTextFieldCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldCnpj, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldTelefoneComercial, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(58, 58, 58)
+                                .addComponent(jButtonFiltrarNome1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelDataNasc_NomeFantasia)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(5, 5, 5)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(399, 399, 399)
+                                        .addComponent(tField_email, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tField_Cidade, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(12, 12, 12)
+                                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(46, 46, 46)
+                                        .addComponent(cb_Estado, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(15, 15, 15)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(5, 5, 5)
+                                        .addComponent(tField_Bairro, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(320, 320, 320)
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(636, 636, 636)
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(708, 708, 708)
+                                        .addComponent(jFormattedTextFieldCep, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(7, 7, 7)
+                                        .addComponent(jFormattedTextFieldDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tField_nomeFantasia, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(24, 24, 24)
+                                .addComponent(tField_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(5, 5, 5)
+                                .addComponent(tField_TipoLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(5, 5, 5)
+                                .addComponent(tField_Logradouro, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(81, 81, 81)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(41, 41, 41)
+                                .addComponent(tField_Complemento, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(221, 221, 221)
+                                .addComponent(jRadioButton_PessoaFisica, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(283, 283, 283)
+                                .addComponent(jRadioButton_PessoaJuridica, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(275, 275, 275)
+                        .addComponent(jButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42)
+                        .addComponent(jButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton_PessoaFisica)
+                    .addComponent(jRadioButton_PessoaJuridica))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabelNome_razaoSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(tField_nome_razaoSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButtonFiltrarNome))
+                        .addGap(7, 7, 7)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jFormattedTextFieldTelefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jFormattedTextFieldTelefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(jLabel_CPF_CNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jFormattedTextFieldCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jFormattedTextFieldCnpj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(7, 7, 7)
+                        .addComponent(jFormattedTextFieldTelefoneComercial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jButtonFiltrarNome1)))
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabelDataNasc_NomeFantasia, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)
+                        .addComponent(jLabel11))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(tField_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tField_Cidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabel12))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(cb_Estado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel10))
+                            .addComponent(tField_Bairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabel8))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel13))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(jFormattedTextFieldCep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jFormattedTextFieldDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(tField_nomeFantasia, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(tField_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(tField_TipoLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel7))
+                    .addComponent(tField_Logradouro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel9))
+                    .addComponent(tField_Complemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(46, 46, 46)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jTableClientesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableClientesMouseReleased
+        try {
+            int indexSelecionado = jTableClientes.getSelectedRow();
+            if (indexSelecionado >= 0) {//   * o clique foi válido
+                String cpfCnpjClienteEscolhido = String.valueOf(jTableClientes.getValueAt(indexSelecionado, 1));
+                PessoaFisica pessoaFisica = new ManipulaBancoPessoaFisica().buscar(new ManipulaBancoPessoaFisica().buscar(cpfCnpjClienteEscolhido));
+
+                if (pessoaFisica != null) {//   * é uma pessoa fisica
+                    tField_nome_razaoSocial.setText(pessoaFisica.getNome());
+                    tField_email.setText(pessoaFisica.getEmail());
+                    jFormattedTextFieldTelefoneCelular.setText(pessoaFisica.getTelefone()[0]);
+                    jFormattedTextFieldTelefoneComercial.setText(pessoaFisica.getTelefone()[1]);
+                    jFormattedTextFieldTelefoneResidencial.setText(pessoaFisica.getTelefone()[2]);
+                    jFormattedTextFieldDataNascimento.setText(new SimpleDateFormat("dd/MM/yyyy").format(pessoaFisica.getDataNascimento()));
+                    jFormattedTextFieldCpf.setText(pessoaFisica.getCpf());
+
+                    Endereco e = pessoaFisica.getEndereco();
+                    tField_Bairro.setText(e.getBairro());
+                    jFormattedTextFieldCep.setText(e.getCEP());
+                    tField_Cidade.setText(e.getCidade());
+                    tField_Complemento.setText(e.getComplemento());
+                    tField_Logradouro.setText(e.getLogradouro());
+                    tField_Numero.setText(e.getNumero());
+                    tField_TipoLogradouro.setText(e.getTipoLogradouro());
+                    cb_Estado.setSelectedItem(e.getEstado());
+
+                    jRadioButton_PessoaFisicaActionPerformed(null);
+                    jRadioButton_PessoaFisica.setSelected(true);
+                } else {//    * é uma pessoa jurídica
+                    PessoaJuridica pf = new ManipulaBancoPessoaJuridica().buscar(new ManipulaBancoPessoaJuridica().buscar(cpfCnpjClienteEscolhido));
+                    if (pf != null) {
+                        tField_nome_razaoSocial.setText(pf.getRazaoSocial());
+                        tField_email.setText(pf.getEmail());
+                        jFormattedTextFieldTelefoneCelular.setText(pf.getTelefone()[0]);
+                        jFormattedTextFieldTelefoneComercial.setText(pf.getTelefone()[1]);
+                        jFormattedTextFieldTelefoneResidencial.setText(pf.getTelefone()[2]);
+                        tField_nomeFantasia.setText(pf.getNomeFantasia());
+                        jFormattedTextFieldCnpj.setText(pf.getCnpj());
+
+                        Endereco e = pf.getEndereco();
+                        tField_Bairro.setText(e.getBairro());
+                        jFormattedTextFieldCep.setText(e.getCEP());
+                        tField_Cidade.setText(e.getCidade());
+                        tField_Complemento.setText(e.getComplemento());
+                        tField_Logradouro.setText(e.getLogradouro());
+                        tField_Numero.setText(e.getNumero());
+                        tField_TipoLogradouro.setText(e.getTipoLogradouro());
+                        cb_Estado.setSelectedItem(e.getEstado());
+
+                        jRadioButton_PessoaJuridicaActionPerformed(null);
+                        jRadioButton_PessoaJuridica.setSelected(true);
+                    } else {//    * não existe no banco
+                        System.out.println("Ciente não existe no banco");
+                        System.out.println("cpf: " + cpfCnpjClienteEscolhido);
+                    }
+                }
+            }
+        } catch (InvalidInputException | SystemErrorException | IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }//GEN-LAST:event_jTableClientesMouseReleased
+
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        try {
+            int indexTabela = jTableClientes.getSelectedRow();
+            if (indexTabela < 0) {
+                JOptionPane.showMessageDialog(rootPane, "Selecione, na tabela qual cliente deseja editar");
+            } else {
+
+                String nome_razaoSocial = tField_nome_razaoSocial.getText();
+                String[] telefone = new String[3];
+                telefone[0] = jFormattedTextFieldTelefoneCelular.getText().trim();//   * apagando espaços em branco
+                if (jFormattedTextFieldTelefoneComercial.getText().replace("(", "").replace(")", "").replace("-", "").trim().equals("")) {//   * caso não tenha informado o telefone comercial
+                    telefone[1] = telefone[0];//    * duplicando o telefone celular
+                } else {//  * informou o  telefone comercial
+                    telefone[1] = jFormattedTextFieldTelefoneComercial.getText().trim();//   * apagando espaços em branco
+                }
+                if (jFormattedTextFieldTelefoneResidencial.getText().replace("(", "").replace(")", "").replace("-", "").trim().equals("")) {// * caso não tenha informado o telefone residencial
+                    telefone[2] = telefone[0];//    * duplicando o telefone celular
+                } else {//  * informou o  telefone residencial
+                    telefone[2] = jFormattedTextFieldTelefoneResidencial.getText().trim();//   * apagando espaços em branco
+                }
+                String tipoLogradouro = tField_TipoLogradouro.getText();
+                String logradoro = tField_Logradouro.getText();
+                String numero = tField_Numero.getText();
+                String complemento = tField_Complemento.getText().replace(",", " ");
+                String bairro = tField_Bairro.getText();
+                String cidade = tField_Cidade.getText();
+                String estado = cb_Estado.getSelectedItem().toString();
+                String CEP = jFormattedTextFieldCep.getText();
+                String email = tField_email.getText();
+                EstadosBrazil eb = Enum.valueOf(EstadosBrazil.class, estado);
+
+                Endereco endereco = new Endereco(tipoLogradouro, logradoro, numero, complemento, bairro, cidade, eb, CEP);
+                if (jRadioButton_PessoaFisica.isSelected()) {
+                    ManipulaBancoPessoaFisica mb = new ManipulaBancoPessoaFisica();
+                    String cpfClienteParaExclusao = String.valueOf(jTableClientes.getValueAt(jTableClientes.getSelectedRow(), 1));
+                    int idClienteParaExclusao = mb.buscar(cpfClienteParaExclusao);
+
+                    String cpf = jFormattedTextFieldCpf.getText();
+                    Date dataNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(jFormattedTextFieldDataNascimento.getText());
+                    PessoaFisica clPF = new PessoaFisica(nome_razaoSocial, cpf, dataNascimento, email, endereco, telefone);
+                    mb.editar(idClienteParaExclusao, clPF);
+                } else if (jRadioButton_PessoaJuridica.isSelected()) {
+                    String cnpjParaExclusao = String.valueOf(jTableClientes.getValueAt(jTableClientes.getSelectedRow(), 1));
+                    int idClienteParaExclusao = new ManipulaBancoPessoaJuridica().buscar(cnpjParaExclusao);
+
+                    String cnpj = jFormattedTextFieldCnpj.getText();
+                    String nomeFantasia = tField_nomeFantasia.getText();
+                    PessoaJuridica clPJ = new PessoaJuridica(cnpj, nome_razaoSocial, nomeFantasia, email, endereco, telefone[0], telefone[1], telefone[2]);
+                    new ManipulaBancoPessoaJuridica().editar(idClienteParaExclusao, clPJ);
+                }
+
+                JOptionPane.showMessageDialog(rootPane, "Editado");
+                loadTableClientes();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }//GEN-LAST:event_jButtonEditarActionPerformed
+
+    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
+        try {
+            int indexTabela = jTableClientes.getSelectedRow();
+            if (indexTabela < 0) {
+                JOptionPane.showMessageDialog(rootPane, "Selecione, na tabela qual cliente deseja editar");
+            } else {
+                int confirmação = JOptionPane.showConfirmDialog(rootPane, "Remover?");
+                //  * 0 se for sim, 1 se for não, 2 se for cancelar
+
+                if (confirmação == 0) {//   * caso tenha confirmado a exclusão
+                    if (jRadioButton_PessoaFisica.isSelected()) {
+                        String cpfClienteParaExclusao = String.valueOf(jTableClientes.getValueAt(jTableClientes.getSelectedRow(), 1));
+                        int idClienteParaExclusao = new ManipulaBancoPessoaFisica().buscar(cpfClienteParaExclusao);
+                        if (idClienteParaExclusao != 0) {//   * é pessoa física
+                            new ManipulaBancoPessoaFisica().remover(idClienteParaExclusao);
+                        } else {//    * é pessoa jurídica
+                        }
+                    } else {
+                        String cnpjClienteParaExclusao = String.valueOf(jTableClientes.getValueAt(jTableClientes.getSelectedRow(), 1));
+                        int idClienteParaExclusao = new ManipulaBancoPessoaJuridica().buscar(cnpjClienteParaExclusao);
+                        new ManipulaBancoPessoaJuridica().remover(idClienteParaExclusao);
+                    }
+                } else {//    * cancelar
+                    //  * pass
+                }
+            }
+            loadTableClientes();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }//GEN-LAST:event_jButtonRemoverActionPerformed
+
+    private void jRadioButton_PessoaFisicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_PessoaFisicaActionPerformed
+        jLabelDataNasc_NomeFantasia.setText("Data Nascimento:");
+        jLabel_CPF_CNPJ.setText("CPF:");
+        jFormattedTextFieldCnpj.setVisible(false);
+        tField_nomeFantasia.setVisible(false);
+        jFormattedTextFieldCpf.setVisible(true);
+        jFormattedTextFieldDataNascimento.setVisible(true);
+        jLabelNome_razaoSocial.setText("Nome:");
+    }//GEN-LAST:event_jRadioButton_PessoaFisicaActionPerformed
+
+    private void jRadioButton_PessoaJuridicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_PessoaJuridicaActionPerformed
+        jLabelDataNasc_NomeFantasia.setText("Nome Fantasia:");
+        jLabel_CPF_CNPJ.setText("CNPJ:");
+        jFormattedTextFieldDataNascimento.setVisible(false);
+        jFormattedTextFieldCpf.setVisible(false);
+        tField_nomeFantasia.setVisible(true);
+        jFormattedTextFieldCnpj.setVisible(true);
+        jLabelNome_razaoSocial.setText("Razão Social:");
+    }//GEN-LAST:event_jRadioButton_PessoaJuridicaActionPerformed
+
+    private void jButtonFiltrarNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFiltrarNomeActionPerformed
+        if (jRadioButton_PessoaFisica.isSelected()) {
+            loadTableClientes(tField_nome_razaoSocial.getText(), operacaoBusca.NOME);
+        } else if (jRadioButton_PessoaJuridica.isSelected()) {
+            loadTableClientes(tField_nome_razaoSocial.getText(), operacaoBusca.RAZAO_SOCIAL);
+        }
+    }//GEN-LAST:event_jButtonFiltrarNomeActionPerformed
+
+    private void jButtonFiltrarNome1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFiltrarNome1ActionPerformed
+        if (jRadioButton_PessoaFisica.isSelected()) {
+            loadTableClientes(jFormattedTextFieldCpf.getText(), operacaoBusca.CPF);
+        } else if (jRadioButton_PessoaJuridica.isSelected()) {
+            loadTableClientes(jFormattedTextFieldCnpj.getText(), operacaoBusca.CNPJ);
+        }
+    }//GEN-LAST:event_jButtonFiltrarNome1ActionPerformed
+
+    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+        //        new TelaCadastroCliente().setVisible(true);
+        try {
+            String nome = tField_nome_razaoSocial.getText();
+            /*
+            private String complemento;
+            private String bairro;
+            private String cidade;
+            private EstadosBrazil estado;
+            private String CEP;*/
+            String[] telefone = new String[3];
+            telefone[0] = jFormattedTextFieldTelefoneCelular.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");//   * apagando espaços em branco
+            telefone[1] = jFormattedTextFieldTelefoneComercial.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");//   * apagando espaços em branco
+            if (telefone[1].equals("")) {//   * caso não tenha informado o telefone comercial
+                telefone[1] = telefone[0];//    * duplicando o telefone celular
+            }
+            telefone[2] = jFormattedTextFieldTelefoneResidencial.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");//   * apagando espaços em branco
+            if (telefone[2].equals("")) {// * caso não tenha informado o telefone residencial
+                telefone[2] = telefone[0];//    * duplicando o telefone celular
+            }
+            String tipoLogradouro = tField_TipoLogradouro.getText();
+            String logradoro = tField_Logradouro.getText();
+            String numero = tField_Numero.getText();
+            String complemento = tField_Complemento.getText().replace(",", " ");
+            String bairro = tField_Bairro.getText();
+            String cidade = tField_Cidade.getText();
+            String estado = cb_Estado.getSelectedItem().toString();
+            String CEP = jFormattedTextFieldCep.getText();
+            String email = tField_email.getText();
+            EstadosBrazil eb = Enum.valueOf(EstadosBrazil.class, estado);
+
+            Endereco endereco = new Endereco(tipoLogradouro, logradoro, numero, complemento, bairro, cidade, eb, CEP);
+            if (jRadioButton_PessoaFisica.isSelected()) {
+                String cpf = jFormattedTextFieldCpf.getText();
+                String auxDataNascimento = jFormattedTextFieldDataNascimento.getText();
+                String[] vetDataNascimento = auxDataNascimento.split("/");
+                Date dataNascimento = new Date(Integer.parseInt(vetDataNascimento[2]) - 1900, Integer.parseInt(vetDataNascimento[1]) - 1, Integer.parseInt(vetDataNascimento[0]));
+
+                PessoaFisica clPF = new PessoaFisica(nome, cpf, dataNascimento, email, endereco, telefone[0], telefone[1], telefone[2]);
+                new ManipulaBancoPessoaFisica().incluir(clPF);
+            } else if (jRadioButton_PessoaJuridica.isSelected()) {
+                String cnpj = jFormattedTextFieldCnpj.getText();
+                String razaoSocial = tField_nome_razaoSocial.getText();
+
+                PessoaJuridica clPJ = new PessoaJuridica(cnpj, razaoSocial, nome, email, endereco, telefone[0], telefone[1], telefone[2]);
+                new ManipulaBancoPessoaJuridica().incluir(clPJ);
+                //String razaoSocial = t
+            }
+            JOptionPane.showMessageDialog(rootPane, "Cliente cadastrado com sucesso!");
+            loadTableClientes();
+        } catch (Exception erro) {
+            erro.printStackTrace();
+            JOptionPane.showMessageDialog(this, erro.getMessage());
+        }
+    }//GEN-LAST:event_jButtonAdicionarActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<EstadosBrazil> cb_Estado;
+    private javax.swing.JButton jButtonAdicionar;
+    private javax.swing.JButton jButtonEditar;
+    private javax.swing.JButton jButtonFiltrarNome;
+    private javax.swing.JButton jButtonFiltrarNome1;
+    private javax.swing.JButton jButtonRemover;
+    private javax.swing.JFormattedTextField jFormattedTextFieldCep;
+    private javax.swing.JFormattedTextField jFormattedTextFieldCnpj;
+    private javax.swing.JFormattedTextField jFormattedTextFieldCpf;
+    private javax.swing.JFormattedTextField jFormattedTextFieldDataNascimento;
+    private javax.swing.JFormattedTextField jFormattedTextFieldTelefoneCelular;
+    private javax.swing.JFormattedTextField jFormattedTextFieldTelefoneComercial;
+    private javax.swing.JFormattedTextField jFormattedTextFieldTelefoneResidencial;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelDataNasc_NomeFantasia;
+    private javax.swing.JLabel jLabelNome_razaoSocial;
+    private javax.swing.JLabel jLabel_CPF_CNPJ;
+    private javax.swing.JRadioButton jRadioButton_PessoaFisica;
+    private javax.swing.JRadioButton jRadioButton_PessoaJuridica;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableClientes;
+    private javax.swing.JTextField tField_Bairro;
+    private javax.swing.JTextField tField_Cidade;
+    private javax.swing.JTextField tField_Complemento;
+    private javax.swing.JTextField tField_Logradouro;
+    private javax.swing.JTextField tField_Numero;
+    private javax.swing.JTextField tField_TipoLogradouro;
+    private javax.swing.JTextField tField_email;
+    private javax.swing.JTextField tField_nomeFantasia;
+    private javax.swing.JTextField tField_nome_razaoSocial;
+    // End of variables declaration//GEN-END:variables
+}
