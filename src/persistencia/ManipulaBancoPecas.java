@@ -7,9 +7,6 @@ package persistencia;
 import exceptions.DataBaseException;
 import exceptions.InvalidInputException;
 import exceptions.SystemErrorException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import modelos.Peca;
 
@@ -58,7 +55,7 @@ public class ManipulaBancoPecas extends DataBase implements IManipulaBanco<Peca>
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<Peca> listaPecas = buscarTodos();
+        ArrayList<Peca> listaPecas = buscarTodosRemovidos();
         for (Peca p : listaPecas) {
             if (p.getCodigoPeca().equals(dado)) {// * encontrou
                 return getID(p);//  * retornando o id
@@ -72,4 +69,17 @@ public class ManipulaBancoPecas extends DataBase implements IManipulaBanco<Peca>
     public int getQuantidadeDeDadosSalvos() {
         return this.quantidadeDeDadosNoBanco;
     }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<Peca> listaPecas = buscarTodosRemovidos();
+        for (Peca p : listaPecas) {
+            if (p.getCodigoPeca().equals(dado)) {// * encontrou
+                return getID(p);//  * retornando o id
+            }
+        }
+
+        return 0;// * objeto não encontrado
+    }
+
 }

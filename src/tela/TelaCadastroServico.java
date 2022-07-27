@@ -32,7 +32,7 @@ public class TelaCadastroServico extends javax.swing.JInternalFrame {
             DefaultTableModel table = (DefaultTableModel) jTableListaServicos.getModel();
             table.setRowCount(0);//apagando linhas antigas para não duplicar a tabela
 
-            ArrayList<Servico> listaServicos = new ManipulaBancoServicos().buscarTodos();// * buscando todos os serviços registrados
+            ArrayList<Servico> listaServicos = new ManipulaBancoServicos().buscarTodosRemovidos();// * buscando todos os serviços registrados
             for (Servico s : listaServicos) {
                 if (s.getNomeServico().toUpperCase().contains(busca.toUpperCase())) {
                     table.addRow(new Object[]{s.getNomeServico(), String.format("%.2f", s.getValorMaoDeObra())});//    * adicionando linha com os dados do serviço

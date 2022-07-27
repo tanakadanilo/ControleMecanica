@@ -66,7 +66,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
 
     private void loadTableVeiculos() {
         try {
-            ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+            ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
             DefaultTableModel table = (DefaultTableModel) jTableListaVeiculos.getModel();
             table.setRowCount(0);
             if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
@@ -174,7 +174,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosPlaca(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -188,7 +188,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosChassis(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -202,7 +202,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosRenavan(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -216,7 +216,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosNomeDono(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -238,7 +238,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosMarca(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -253,7 +253,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosModelo(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -268,7 +268,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosTipoVeiculo(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -282,7 +282,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosAnoModelo(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -296,7 +296,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void FiltraTableVeiculosAnoFabricacao(String filtro) throws Exception {
-        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
         ArrayList<Veiculo> listaVeiculosFiltrada = new ArrayList<>();
         if (listaVeiculos == null || listaVeiculos.isEmpty()) {// * caso a lista esteja vazia
             return;
@@ -313,7 +313,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTabelaClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodosRemovidos();
             if (listaPessoas != null) {
                 for (PessoaFisica p : listaPessoas) {
                     if (p.getNome().toUpperCase().contains(nome.toUpperCase())) {
@@ -337,7 +337,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTabelaClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodosRemovidos();
             if (listaPessoasJuridicas == null) {
                 return;
             }
@@ -1034,7 +1034,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
 
     private void loadComboBoxModelos() {
         try {
-            ArrayList<ModeloVeiculo> listaModelos = new ManipulaBancoModelos().buscarTodos();
+            ArrayList<ModeloVeiculo> listaModelos = new ManipulaBancoModelos().buscarTodosRemovidos();
             String[] nomeModelos = new String[listaModelos.size() + 1];
             nomeModelos[0] = "--Modelos--";
             for (int i = 0; i < listaModelos.size(); i++) {
@@ -1047,7 +1047,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void loadComboBoxMarcas() throws InvalidInputException, SystemErrorException {
-        ArrayList<MarcaVeiculo> listaModelos = new ManipulaBancoMarca().buscarTodos();
+        ArrayList<MarcaVeiculo> listaModelos = new ManipulaBancoMarca().buscarTodosRemovidos();
         if (listaModelos == null) {
             return;
         }
@@ -1060,7 +1060,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
     }
 
     private void loadTableClientes() throws InvalidInputException, SystemErrorException {
-        ArrayList<PessoaFisica> listaPessoasFisicas = new ManipulaBancoPessoaFisica().buscarTodos();
+        ArrayList<PessoaFisica> listaPessoasFisicas = new ManipulaBancoPessoaFisica().buscarTodosRemovidos();
         String[][] dados = new String[listaPessoasFisicas.size()][5];
         for (int i = 0; i < listaPessoasFisicas.size(); i++) {
             dados[i][0] = "" + TipoCliente.PESSOA_FISICA;
@@ -1074,7 +1074,7 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
 
         DefaultTableModel table = (DefaultTableModel) jTabelaClientes.getModel();
 
-        ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+        ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodosRemovidos();
         String[] dados2 = new String[5];
         for (int i = 0; i < listaPessoasJuridicas.size(); i++) {
             dados2[0] = "" + TipoCliente.PESSOA_JURIDICA;

@@ -79,7 +79,7 @@ public class TelaBuscaOS extends javax.swing.JInternalFrame {
 
     private void loadTableFuncionarios() {
         try {
-            ArrayList<Funcionario> listaFuncionarios = new ManipulaBancoFuncionario().buscarTodos();
+            ArrayList<Funcionario> listaFuncionarios = new ManipulaBancoFuncionario().buscarTodosRemovidos();
             DefaultTableModel table = (DefaultTableModel) jTableFuncionarios.getModel();
             table.setRowCount(0);// * apagando linhas para não duplicar os dados da tabela
             if (listaFuncionarios == null || listaFuncionarios.isEmpty()) {

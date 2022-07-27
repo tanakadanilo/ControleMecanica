@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.text.ParseException;
 import java.util.ArrayList;
+import modelos.PessoaFisica;
 import modelos.PessoaJuridica;
 import modelos.auxiliares.Endereco;
 
@@ -80,7 +81,10 @@ public class ManipulaBancoPessoaJuridica extends DataBase implements IManipulaBa
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<PessoaJuridica> listaPessoas = buscarTodos();
+        ArrayList<PessoaJuridica> listaPessoas = buscarTodosRemovidos();
+        if (listaPessoas == null || listaPessoas.isEmpty()) {
+            return 0;
+        }
         for (PessoaJuridica p : listaPessoas) {
             if (p.getCnpj().equals(dado)) {//    * encontrou
                 return getID(p);//  * retornando o id
@@ -90,7 +94,7 @@ public class ManipulaBancoPessoaJuridica extends DataBase implements IManipulaBa
     }
 
     public int buscarPorRazaoSocial(String nome) throws InvalidInputException, SystemErrorException {
-        ArrayList<PessoaJuridica> listaPessoas = buscarTodos();
+        ArrayList<PessoaJuridica> listaPessoas = buscarTodosRemovidos();
         for (PessoaJuridica p : listaPessoas) {
             if (p.getRazaoSocial().equals(nome)) {//    * encontrou
                 return getID(p);//  * retornando o id
@@ -98,4 +102,19 @@ public class ManipulaBancoPessoaJuridica extends DataBase implements IManipulaBa
         }
         return 0; //    * objeto não encontrado
     }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<PessoaJuridica> listaPessoas = buscarTodosRemovidos();
+        if (listaPessoas == null || listaPessoas.isEmpty()) {
+            return 0;
+        }
+        for (var p : listaPessoas) {
+            if (p.getCnpj().equals(dado)) {//    * encontrou
+                return getIDExcluidos(p);//  * retornando o id
+            }
+        }
+        return 0;// * objeto não encontrado
+    }
+
 }

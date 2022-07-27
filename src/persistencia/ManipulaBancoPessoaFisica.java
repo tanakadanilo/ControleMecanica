@@ -82,7 +82,10 @@ public class ManipulaBancoPessoaFisica extends DataBase implements IManipulaBanc
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<PessoaFisica> listaPessoas = buscarTodosRemovidos();
+        ArrayList<PessoaFisica> listaPessoas = buscarTodosAtivos();
+        if (listaPessoas == null || listaPessoas.isEmpty()) {
+            return 0;// * não existe lista
+        }
         for (PessoaFisica p : listaPessoas) {
             if (p.getCpf().equals(dado) && p.isCadastroAtivo()) {//    * encontrou
                 return getID(p);//  * retornando o id
@@ -92,7 +95,7 @@ public class ManipulaBancoPessoaFisica extends DataBase implements IManipulaBanc
     }
 
     public int buscarPorNome(String Nome) throws Exception {
-        ArrayList<PessoaFisica> listaPessoas = buscarTodosRemovidos();
+        ArrayList<PessoaFisica> listaPessoas = buscarTodosAtivos();
         for (PessoaFisica p : listaPessoas) {
             if (p.getNome().equals(Nome)) {//    * encontrou
                 return getID(p);//  * retornando o id
@@ -109,6 +112,17 @@ public class ManipulaBancoPessoaFisica extends DataBase implements IManipulaBanc
     @Override
     public int getQuantidadeDeDadosSalvos() {
         return this.quantidadeDeDadosNoBanco;
+    }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<PessoaFisica> listaPessoas = buscarTodosRemovidos();
+        for (PessoaFisica p : listaPessoas) {
+            if (p.getCpf().equals(dado)) {//    * encontrou
+                return getIDExcluidos(p);//  * retornando o id
+            }
+        }
+        return 0;// * objeto não encontrado
     }
 
 }

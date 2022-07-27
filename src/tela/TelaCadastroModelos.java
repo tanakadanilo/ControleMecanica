@@ -275,7 +275,7 @@ public class TelaCadastroModelos extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableModelos.getModel();
             table.setRowCount(0);
-            ArrayList<ModeloVeiculo> listaModelos = new ManipulaBancoModelos().buscarTodos();
+            ArrayList<ModeloVeiculo> listaModelos = new ManipulaBancoModelos().buscarTodosRemovidos();
             if (listaModelos == null || listaModelos.isEmpty()) {
                 return;//  *  não tem o q mostrar na tabela
             }
@@ -299,7 +299,7 @@ public class TelaCadastroModelos extends javax.swing.JInternalFrame {
 
     private void loadComboBoxMarcas() {
         try {
-            ArrayList<MarcaVeiculo> listaMarcas = new ManipulaBancoMarca().buscarTodos();
+            ArrayList<MarcaVeiculo> listaMarcas = new ManipulaBancoMarca().buscarTodosRemovidos();
             String[] marcas = new String[listaMarcas.size() + 1];
             marcas[0] = "--MARCAS--";
 

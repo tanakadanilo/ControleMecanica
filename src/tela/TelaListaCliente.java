@@ -13,17 +13,12 @@ import modelos.PessoaFisica;
 import persistencia.ManipulaBancoPessoaFisica;
 import persistencia.ManipulaBancoVeiculo;
 import enumerations.EstadosBrazil;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import exceptions.InvalidInputException;
+import exceptions.SystemErrorException;
+import java.awt.HeadlessException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -55,7 +50,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         loadComboBox();
         loadTableClientes();
 
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jTableClientes.getModel());
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTableClientes.getModel());
         jTableClientes.setRowSorter(sorter);
 
         /*Font roboto = null;
@@ -78,8 +73,8 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
-            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodosRemovidos();
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodosRemovidos();
             if (listaPessoas != null && !listaPessoas.isEmpty()) {//    * não tentar se nãoo tiver dados para serem carregados
                 for (PessoaFisica p : listaPessoas) {
                     String[] dados = new String[jTableClientes.getColumnCount()];
@@ -149,7 +144,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodosRemovidos();
             if (listaPessoas != null) {
                 for (PessoaFisica p : listaPessoas) {
                     if (p.getNome().toUpperCase().contains(nome.toUpperCase())) {
@@ -177,7 +172,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodosRemovidos();
             if (listaPessoasJuridicas == null) {
                 return;
             }
@@ -208,7 +203,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodosRemovidos();
             if (listaPessoas != null) {
                 for (PessoaFisica p : listaPessoas) {
                     if (p.getCpf().toUpperCase().contains(cpf)) {
@@ -237,7 +232,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
             System.out.println(cnpj.replace(".", "").replace(" ", "").replace("/", "").replace("-", ""));
             DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodosRemovidos();
             if (listaPessoasJuridicas == null) {
                 return;
             }
@@ -268,7 +263,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodos();
+            ArrayList<PessoaFisica> listaPessoas = new ManipulaBancoPessoaFisica().buscarTodosRemovidos();
             if (listaPessoas != null) {
                 for (PessoaFisica p : listaPessoas) {
                     String[] dados = new String[jTableClientes.getColumnCount()];
@@ -295,7 +290,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableClientes.getModel();
             table.setRowCount(0);// * apagando dados da tabela para não duplicar as linhas
-            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodosRemovidos();
             if (listaPessoasJuridicas == null) {
                 return;
             }
@@ -844,7 +839,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(rootPane, "Editado");
                 loadTableClientes();
             }
-        } catch (Exception e) {
+        } catch (InvalidInputException | SystemErrorException | HeadlessException | IOException | ParseException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, e.getMessage());
         }
@@ -877,7 +872,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
                 }
             }
             loadTableClientes();
-        } catch (Exception e) {
+        } catch (InvalidInputException | SystemErrorException | HeadlessException | IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, e.getMessage());
         }
@@ -953,7 +948,7 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
             }
             JOptionPane.showMessageDialog(rootPane, "Cliente cadastrado com sucesso!");
             loadTableClientes();
-        } catch (Exception erro) {
+        } catch (InvalidInputException | SystemErrorException | HeadlessException | IOException | NumberFormatException erro) {
             erro.printStackTrace();
             JOptionPane.showMessageDialog(this, erro.getMessage());
         }
@@ -1027,14 +1022,18 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
                         jRadioButton_PessoaJuridicaActionPerformed(null);
                         jRadioButton_PessoaJuridica.setSelected(true);
                     } else {//    * não existe no banco
-                        System.out.println("Ciente não existe no banco");
-                        System.out.println("cpf: " + cpfCnpjClienteEscolhido);
+                        throw new IllegalStateException("O cliente: \"" + cpfCnpjClienteEscolhido + "\", não existe nem no banco de dados de pessoa física nem no de pessoa jurídica");
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (InvalidInputException | SystemErrorException | IllegalStateException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, e.getMessage());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, "rapaz, deu tão errado que nem eu sei o que deu de errado, isso não era pra acontecer não");
+
         }    }//GEN-LAST:event_jTableClientesMouseReleased
 
     public static void main(String args[]) {
@@ -1050,15 +1049,11 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaListaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaListaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaListaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(TelaListaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the form */
@@ -1067,65 +1062,6 @@ public class TelaListaCliente extends javax.swing.JInternalFrame {
                 new TelaListaCliente().setVisible(true);
             }
         });
-    }
-
-    private void excluirPessoaFisica() {
-        try {
-            ManipulaBancoPessoaFisica mb = new ManipulaBancoPessoaFisica();
-            String cpfClienteParaExclusao = String.valueOf(jTableClientes.getValueAt(jTableClientes.getSelectedRow(), 1));
-            int idClienteParaExclusao = new ManipulaBancoPessoaFisica().buscar(cpfClienteParaExclusao);
-            mb.remover(idClienteParaExclusao);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(rootPane, e.getMessage());
-        }
-    }
-
-    private void adicionarPessoaFisica() {
-        try {
-            String nome = tField_nome_razaoSocial.getText();
-            String[] telefone = new String[3];
-            telefone[0] = jFormattedTextFieldTelefoneCelular.getText().trim();//   * apagando espaços em branco
-            if (jFormattedTextFieldTelefoneComercial.getText().trim().equals("")) {//   * caso não tenha informado o telefone comercial
-                telefone[1] = telefone[0];//    * duplicando o telefone celular
-            } else {//  * informou o  telefone comercial
-                telefone[1] = jFormattedTextFieldTelefoneComercial.getText().trim();//   * apagando espaços em branco
-            }
-            if (jFormattedTextFieldTelefoneResidencial.getText().trim().equals("")) {// * caso não tenha informado o telefone residencial
-                telefone[2] = telefone[0];//    * duplicando o telefone celular
-            } else {//  * informou o  telefone residencial
-                telefone[2] = jFormattedTextFieldTelefoneResidencial.getText().trim();//   * apagando espaços em branco
-            }
-            String tipoLogradouro = tField_TipoLogradouro.getText();
-            String logradoro = tField_Logradouro.getText();
-            String numero = tField_Numero.getText();
-            String complemento = tField_Complemento.getText();
-            String bairro = tField_Bairro.getText();
-            String cidade = tField_Cidade.getText();
-            String estado = cb_Estado.getSelectedItem().toString();
-            String CEP = jFormattedTextFieldCep.getText();
-            String email = tField_email.getText();
-            EstadosBrazil eb = Enum.valueOf(EstadosBrazil.class, estado);
-
-            Endereco endereco = new Endereco(tipoLogradouro, logradoro, numero, complemento, bairro, cidade, eb, CEP);
-            if (jRadioButton_PessoaFisica.isSelected()) {
-                String cpf = jFormattedTextFieldCpf.getText();
-                Date dataNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(jFormattedTextFieldDataNascimento.getText());
-
-                PessoaFisica clPF = new PessoaFisica(nome, cpf, dataNascimento, email, endereco, telefone);
-                new ManipulaBancoPessoaFisica().incluir(clPF);
-            } else if (jRadioButton_PessoaJuridica.isSelected()) {
-                String cnpj = jFormattedTextFieldCnpj.getText();
-                String razaoSocial = tField_nome_razaoSocial.getText();
-
-                PessoaJuridica clPJ = new PessoaJuridica(cnpj, razaoSocial, nome, email, endereco, telefone[0], telefone[1], telefone[2]);
-                new ManipulaBancoPessoaJuridica().incluir(clPJ);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(rootPane, e.getMessage());
-
-        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

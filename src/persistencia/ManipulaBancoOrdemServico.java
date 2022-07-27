@@ -94,7 +94,7 @@ public class ManipulaBancoOrdemServico extends DataBase implements IManipulaBanc
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<OrdemDeServico> listaOSs = buscarTodos();
+        ArrayList<OrdemDeServico> listaOSs = buscarTodosRemovidos();
         for (OrdemDeServico os : listaOSs) {
             if (String.valueOf(os.getCodigo()).equals(dado)) {//   * encontrou
                 return getID(os);// * retornando o id
@@ -104,7 +104,7 @@ public class ManipulaBancoOrdemServico extends DataBase implements IManipulaBanc
     }
 
     public ArrayList<OrdemDeServico> buscarTodos(int idVeiculo) throws Exception {
-        ArrayList<OrdemDeServico> listaOSsCompleta = buscarTodos();//   * todas as OSs ativas no sistema
+        ArrayList<OrdemDeServico> listaOSsCompleta = buscarTodosRemovidos();//   * todas as OSs ativas no sistema
         ArrayList<OrdemDeServico> listaOSsDesteDono = new ArrayList<>();//  *OSs do cliente que está sendo buscado
         for (OrdemDeServico osAtual : listaOSsCompleta) {
             if (osAtual.getIdVeiculo() == idVeiculo) {// * encontrou uma OS deste dono
@@ -120,7 +120,7 @@ public class ManipulaBancoOrdemServico extends DataBase implements IManipulaBanc
     }
 
     public ArrayList<OrdemDeServico> BuscarTodosOrcamentos() throws Exception {
-        ArrayList<OrdemDeServico> listaOSsCompleta = buscarTodos();//   * todas as OSs ativas no sistema
+        ArrayList<OrdemDeServico> listaOSsCompleta = buscarTodosRemovidos();//   * todas as OSs ativas no sistema
         ArrayList<OrdemDeServico> listaOrcamentos = new ArrayList<>();//    * todos os orcamentos que ainda não foram aprovados
         for (OrdemDeServico os : listaOSsCompleta) {
             if (os.getSituacao() == OrdemDeServico.SituacaoOrdemServico.EM_ABERTO) {//   * é um orcamento
@@ -211,6 +211,17 @@ public class ManipulaBancoOrdemServico extends DataBase implements IManipulaBanc
     @Override
     public int getQuantidadeDeDadosSalvos() {
         return this.quantidadeDeDadosNoBanco;
+    }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<OrdemDeServico> listaOSs = buscarTodosRemovidos();
+        for (OrdemDeServico os : listaOSs) {
+            if (String.valueOf(os.getCodigo()).equals(dado)) {//   * encontrou
+                return getID(os);// * retornando o id
+            }
+        }
+        return 0;// * objeto não encontrado
     }
 
 }

@@ -238,7 +238,7 @@ public class TelaCadastroDeMarcas extends javax.swing.JInternalFrame {
     private void loadTableMarcas() throws Exception {
         DefaultTableModel dtb = (DefaultTableModel) jTableMarcasExistentes.getModel();
         dtb.setRowCount(0);
-        ArrayList<MarcaVeiculo> listaMarcas = new ManipulaBancoMarca().buscarTodos();
+        ArrayList<MarcaVeiculo> listaMarcas = new ManipulaBancoMarca().buscarTodosRemovidos();
         if (listaMarcas == null || listaMarcas.isEmpty()) {
             return;
         }

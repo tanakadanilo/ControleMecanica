@@ -55,11 +55,32 @@ public interface IManipulaBanco<T extends ExclusaoLogica> {
         }
         return 0;// * objeto não encontrado
     }
+    public default int getIDExcluidos(T obj) throws InvalidInputException, SystemErrorException {
+        try {
+            try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {
+                String linha = br.readLine();
+                while (linha != null) {
+                    T item = parse(linha);// * parsing linha
+                    if (item.equals(obj) && !item.isCadastroAtivo()) {//  * encontrou
+                        return Integer.parseInt(linha.split(";")[0]);// * retornando o id
+                    }
+                    linha = br.readLine();
+                }
+            }
+        } catch (IOException e) {
+            try {
+                new FileWriter(this.getNomeArquivoDisco()).write("");
+            } catch (IOException ex) {
+                throw new IllegalStateException("falha ao ler e ao criar o arquivo: \"" + this.getNomeArquivoDisco() + "\"");
+            }
+        }
+        return 0;// * objeto não encontrado
+    }
 
     public T parse(String dados) throws SystemErrorException;
 
     public default void incluir(T obj) throws InvalidInputException, IOException, SystemErrorException {
-        ArrayList<T> listaCompleta = buscarTodos();//   * pegando todos os dados ativos do banco
+        ArrayList<T> listaCompleta = buscarTodosRemovidos();//   * pegando todos os dados ativos do banco
         if (listaCompleta != null && !listaCompleta.isEmpty()) {//  * tem algo na lista
             for (T objAtual : listaCompleta) {//    * percorrendo toda a lista
                 if (((T) obj).equals(((T) objAtual))) {//   * já existe um dado igual no banco
@@ -109,18 +130,35 @@ public interface IManipulaBanco<T extends ExclusaoLogica> {
         return null;//  * objeto não encontrado
     }
 
-    public default ArrayList<T> buscarTodos() throws InvalidInputException, SystemErrorException {
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException;
+
+    public default T buscarNosExcluidos(int id) throws InvalidInputException, IOException, SystemErrorException {
+        if (id == 0) {
+            return null;
+        }
+        ArrayList<T> listaExcluidos = buscarTodosRemovidos();
+        if (listaExcluidos == null || listaExcluidos.isEmpty()) {
+            return null;//  * não tem onde procurar
+        }
+        for (T item : listaExcluidos) {
+            if (getIDExcluidos(item) == id) {
+                return item;//  * achou
+            }
+        }
+
+        return null;//  * não existe
+    }
+
+    public default ArrayList<T> buscarTodosRemovidos() throws InvalidInputException, SystemErrorException {
         ArrayList<T> listaCompleta = new ArrayList<>();
-        try {
-            try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {
-                String linha = br.readLine();
-                while (linha != null) {
-                    T obj = parse(linha);// * parsing linha
-                    if (obj.isCadastroAtivo()) {// * adicionar apenas cadastros ativos
-                        listaCompleta.add(obj);
-                    }
-                    linha = br.readLine();
+        try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {
+            String linha = br.readLine();
+            while (linha != null) {
+                T obj = parse(linha);// * parsing linha
+                if (!obj.isCadastroAtivo()) {// * adicionar apenas cadastros ativos
+                    listaCompleta.add(obj);
                 }
+                linha = br.readLine();
             }
         } catch (IOException e) {
             try {
@@ -137,20 +175,20 @@ public interface IManipulaBanco<T extends ExclusaoLogica> {
         }
     }
 
-    public default ArrayList<T> buscarTodosRemovidos() throws InvalidInputException, SystemErrorException {
+    public default ArrayList<T> buscarTodosAtivos() throws InvalidInputException, SystemErrorException {
         ArrayList<T> listaCompleta = new ArrayList<>();
         try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {
             String linha = br.readLine();
             while (linha != null) {
                 T obj = parse(linha);// * parsing linha
-                if (!obj.isCadastroAtivo()) {// * adicionar apenas cadastros ativos
+                if (obj.isCadastroAtivo()) {// * adicionar apenas cadastros ativos
                     listaCompleta.add(obj);
                 }
                 linha = br.readLine();
             }
         } catch (IOException e) {
             corrigeBanco();
-            return buscarTodosRemovidos();
+            return buscarTodosAtivos();
         }
 
         if (listaCompleta.isEmpty()) {//    * caso não tenha nenhum cadastro ativo

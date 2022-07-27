@@ -7,8 +7,6 @@ package persistencia;
 import exceptions.DataBaseException;
 import exceptions.InvalidInputException;
 import exceptions.SystemErrorException;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import modelos.Servico;
 
@@ -48,7 +46,7 @@ public class ManipulaBancoServicos extends DataBase implements IManipulaBanco<Se
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<Servico> listaServicos = buscarTodos();
+        ArrayList<Servico> listaServicos = buscarTodosRemovidos();
         for (Servico s : listaServicos) {
             if (s.getNomeServico().equals(dado)) {//  * encontrou
                 return getID(s);//  * retornando o id
@@ -60,6 +58,17 @@ public class ManipulaBancoServicos extends DataBase implements IManipulaBanco<Se
     @Override
     public int getQuantidadeDeDadosSalvos() {
         return this.quantidadeDeDadosNoBanco;
+    }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<Servico> listaServicos = buscarTodosRemovidos();
+        for (Servico s : listaServicos) {
+            if (s.getNomeServico().equals(dado)) {//  * encontrou
+                return getID(s);//  * retornando o id
+            }
+        }
+        return 0;// * objeto não encontrado
     }
 
 }

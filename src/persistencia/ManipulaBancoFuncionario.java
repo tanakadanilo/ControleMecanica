@@ -16,8 +16,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modelos.Funcionario;
 import modelos.auxiliares.Endereco;
 
@@ -27,7 +25,6 @@ import modelos.auxiliares.Endereco;
  */
 public class ManipulaBancoFuncionario extends DataBase implements IManipulaBanco<Funcionario> {
 
-    Funcionario funcionarioVazio = new Funcionario();
 
     public ManipulaBancoFuncionario() {
         super(12, "Funcionarios.txt");
@@ -113,7 +110,7 @@ public class ManipulaBancoFuncionario extends DataBase implements IManipulaBanco
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<Funcionario> listaFunc = buscarTodos();
+        ArrayList<Funcionario> listaFunc = buscarTodosRemovidos();
 
         for (Funcionario f : listaFunc) {
             if (("" + f.getMatricula()).equals(dado)) {
@@ -124,13 +121,13 @@ public class ManipulaBancoFuncionario extends DataBase implements IManipulaBanco
     }
 
     public int buscar(String dado, boolean nome) throws InvalidInputException, SystemErrorException {
-        ArrayList<Funcionario> listaFunc = buscarTodos();
+        ArrayList<Funcionario> listaFunc = buscarTodosRemovidos();
 
         if (listaFunc == null) {
             return 0;// * não existe lista, portanto não achou
         }
         for (Funcionario f : listaFunc) {
-            if (("" + f.getNome()).equals(dado)) {
+            if (f.getNome().equals(dado)) {
                 return getID(f);
             }
         }
@@ -150,6 +147,21 @@ public class ManipulaBancoFuncionario extends DataBase implements IManipulaBanco
     @Override
     public String getNomeArquivoIdDisco() {
         return this.arquivoID;
+    }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<Funcionario> listaFunc = buscarTodosRemovidos();
+
+        if (listaFunc == null) {
+            return 0;// * não existe lista, portanto não achou
+        }
+        for (Funcionario f : listaFunc) {
+            if (f.getNome().equals(dado)) {
+                return getID(f);
+            }
+        }
+        return 0;
     }
 
 }

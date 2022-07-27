@@ -5,12 +5,12 @@
         <group>
             <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/persistencia/IManipulaBanco.java</file>
             <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/tela/TelaListaCliente.java</file>
-            <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/modelos/Funcionario.java</file>
-            <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/persistencia/ManipulaBancoPessoaFisica.java</file>
             <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/tela/lixeira/TelaClientesExcluidos.java</file>
-            <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/modelos/PessoaJuridica.java</file>
-            <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/modelos/PessoaFisica.java</file>
+            <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/persistencia/ManipulaBancoVeiculo.java</file>
             <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/tela/TelaPrincipal.java</file>
+            <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/persistencia/ManipulaBancoServicos.java</file>
+            <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/persistencia/ManipulaBancoPessoaJuridica.java</file>
+            <file>file:/C:/Users/tanak/OneDrive/Documentos/GitHub/ControleMecanica/src/persistencia/ManipulaBancoMarca.java</file>
         </group>
     </open-files>
 </project-private>

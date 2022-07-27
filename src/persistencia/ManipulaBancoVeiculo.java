@@ -9,8 +9,6 @@ import enumerations.TipoCliente;
 import exceptions.DataBaseException;
 import exceptions.InvalidInputException;
 import exceptions.SystemErrorException;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import modelos.Veiculo;
 
@@ -66,7 +64,7 @@ public class ManipulaBancoVeiculo extends DataBase implements IManipulaBanco<Vei
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<Veiculo> listaVeiculos = buscarTodos();
+        ArrayList<Veiculo> listaVeiculos = buscarTodosRemovidos();
         for (Veiculo v : listaVeiculos) {
             if (v.getPlaca().equals(dado)) {//  * achou
                 return getID(v);
@@ -76,11 +74,11 @@ public class ManipulaBancoVeiculo extends DataBase implements IManipulaBanco<Vei
     }
 
     public int getQuantidadeVeiculos() throws Exception {
-        return buscarTodos().size();
+        return buscarTodosRemovidos().size();
     }
 
     public int getQuantidadeVeiculos(int idDono) throws Exception {
-        ArrayList<Veiculo> lista = buscarTodos();
+        ArrayList<Veiculo> lista = buscarTodosRemovidos();
         int quantidade = 0;
         if (lista == null) {
             return 0;
@@ -97,4 +95,16 @@ public class ManipulaBancoVeiculo extends DataBase implements IManipulaBanco<Vei
     public int getQuantidadeDeDadosSalvos() {
         return this.quantidadeDeDadosNoBanco;
     }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<Veiculo> listaVeiculos = buscarTodosRemovidos();
+        for (Veiculo v : listaVeiculos) {
+            if (v.getPlaca().equals(dado)) {//  * achou
+                return getID(v);
+            }
+        }
+        return 0;// * objeto não encontrado
+    }
+
 }

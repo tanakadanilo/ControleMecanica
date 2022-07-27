@@ -40,7 +40,7 @@ public class TelaListaPeca extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableListaPecas.getModel();
             table.setRowCount(0);
-            ArrayList<Peca> listaPecas = new ManipulaBancoPecas().buscarTodos();
+            ArrayList<Peca> listaPecas = new ManipulaBancoPecas().buscarTodosRemovidos();
             for (Peca p : listaPecas) {
                 String[] dados = {String.valueOf(p.getCodigoPeca()),
                     String.valueOf(p.getDescricao()),
@@ -61,7 +61,7 @@ public class TelaListaPeca extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableListaPecas.getModel();
             table.setRowCount(0);
-            ArrayList<Peca> listaPecas = new ManipulaBancoPecas().buscarTodos();
+            ArrayList<Peca> listaPecas = new ManipulaBancoPecas().buscarTodosRemovidos();
             for (Peca p : listaPecas) {
                 if (p.getCodigoPeca().toUpperCase().contains(codigo.toUpperCase())) {
                     String[] dados = {String.valueOf(p.getCodigoPeca()),
@@ -84,7 +84,7 @@ public class TelaListaPeca extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTableListaPecas.getModel();
             table.setRowCount(0);
-            ArrayList<Peca> listaPecas = new ManipulaBancoPecas().buscarTodos();
+            ArrayList<Peca> listaPecas = new ManipulaBancoPecas().buscarTodosRemovidos();
             for (Peca p : listaPecas) {
                 if (p.getDescricao().toUpperCase().contains(codigo.toUpperCase())) {
                     String[] dados = {String.valueOf(p.getCodigoPeca()),

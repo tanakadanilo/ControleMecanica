@@ -54,7 +54,7 @@ public class ManipulaBancoMarca extends DataBase implements IManipulaBanco<Marca
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<MarcaVeiculo> listaMarcas = buscarTodos();
+        ArrayList<MarcaVeiculo> listaMarcas = buscarTodosRemovidos();
         for (MarcaVeiculo marca : listaMarcas) {
             if (marca.getNomeMarca().equals(dado)) {//  * encontrou
                 return getID(marca);//  * retornando o id
@@ -67,6 +67,18 @@ public class ManipulaBancoMarca extends DataBase implements IManipulaBanco<Marca
     @Override
     public int getQuantidadeDeDadosSalvos() {
         return this.quantidadeDeDadosNoBanco;
+    }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<MarcaVeiculo> listaMarcas = buscarTodosRemovidos();
+        for (MarcaVeiculo marca : listaMarcas) {
+            if (marca.getNomeMarca().equals(dado)) {//  * encontrou
+                return getID(marca);//  * retornando o id
+            }
+        }
+
+        return 0;// * objeto não encontrado
     }
 
 }

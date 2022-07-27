@@ -46,7 +46,7 @@ public class TelaListaFuncionario extends javax.swing.JInternalFrame {
 
     private void loadTableFuncionarios() {
         try {
-            ArrayList<Funcionario> listaFuncionarios = new ManipulaBancoFuncionario().buscarTodos();
+            ArrayList<Funcionario> listaFuncionarios = new ManipulaBancoFuncionario().buscarTodosRemovidos();
             DefaultTableModel table = (DefaultTableModel) jTableFuncionarios.getModel();
             table.setRowCount(0);// * apagando linhas para não duplicar os dados da tabela
             if (listaFuncionarios == null || listaFuncionarios.isEmpty()) {
@@ -672,7 +672,7 @@ public class TelaListaFuncionario extends javax.swing.JInternalFrame {
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         try {
-            ArrayList<Funcionario> listaFunc = new ManipulaBancoFuncionario().buscarTodos();
+            ArrayList<Funcionario> listaFunc = new ManipulaBancoFuncionario().buscarTodosRemovidos();
             ArrayList<Funcionario> listaFiltrada = null;
             if (listaFunc != null && !listaFunc.isEmpty()) {
                 switch (jComboBoxTipoBuscar.getSelectedIndex()) {

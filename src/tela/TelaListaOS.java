@@ -50,7 +50,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -96,7 +96,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -146,7 +146,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -196,7 +196,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -246,7 +246,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -296,7 +296,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -346,7 +346,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -396,7 +396,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -446,7 +446,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {
@@ -497,7 +497,7 @@ public class TelaListaOS extends javax.swing.JInternalFrame {
             table.setRowCount(0);
 
             ArrayList<OrdemDeServico> listaOSs = null;
-            listaOSs = new ManipulaBancoOrdemServico().buscarTodos();
+            listaOSs = new ManipulaBancoOrdemServico().buscarTodosRemovidos();
 
             if (listaOSs != null && !listaOSs.isEmpty()) {//    * caso exista alguma OS para mostrar
                 for (OrdemDeServico os : listaOSs) {

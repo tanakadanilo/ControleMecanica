@@ -65,7 +65,7 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
 
     private void loadTableVeiculos(String busca) {
         try {
-            ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodos();
+            ArrayList<Veiculo> listaVeiculos = new ManipulaBancoVeiculo().buscarTodosRemovidos();
             DefaultTableModel table = (DefaultTableModel) jTableVeiculos.getModel();
             table.setRowCount(0);// * apagando linhas para não duplicar os dados da tabela
 
@@ -120,7 +120,7 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
             DefaultTableModel table = (DefaultTableModel) jTableServicos.getModel();
             table.setRowCount(0);//apagando linhas antigas para não duplicar a tabela
 
-            ArrayList<Servico> listaServicos = new ManipulaBancoServicos().buscarTodos();// * buscando todos os serviços registrados
+            ArrayList<Servico> listaServicos = new ManipulaBancoServicos().buscarTodosRemovidos();// * buscando todos os serviços registrados
             for (Servico s : listaServicos) {
                 if (s.getNomeServico().toUpperCase().contains(busca.toUpperCase())) {// * ignorando maiusculo e minusculo
                     table.addRow(new Object[]{s.getNomeServico(), String.format("%.2f", s.getValorMaoDeObra())});//    * adicionando linha com os dados do serviço
@@ -134,7 +134,7 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
 
     private void loadComboBoxFuncionarios() {
         try {
-            ArrayList<Funcionario> listaFunc = new ManipulaBancoFuncionario().buscarTodos();
+            ArrayList<Funcionario> listaFunc = new ManipulaBancoFuncionario().buscarTodosRemovidos();
             ArrayList<String> listaNomesFuncionarios = new ArrayList();
             if (listaFunc == null) {
                 return;//   * não tem nada pra mostrar na lista
@@ -157,7 +157,7 @@ public class TelaCadastroDeOS extends javax.swing.JInternalFrame {
         try {
             DefaultTableModel table = (DefaultTableModel) jTablePecas.getModel();
             table.setRowCount(0);// * apagando linhas para não duplicar dados na tabela
-            ArrayList<Peca> listaPecas = new ManipulaBancoPecas().buscarTodos();
+            ArrayList<Peca> listaPecas = new ManipulaBancoPecas().buscarTodosRemovidos();
             for (Peca p : listaPecas) {
                 int quantidadePecasDisponiveis = p.getQuantidadeNoEstoque() - p.getQuantidadeReservadas();
                 table.addRow(new Object[]{p.getCodigoPeca(), p.getDescricao(), p.getValorPeca(), quantidadePecasDisponiveis});

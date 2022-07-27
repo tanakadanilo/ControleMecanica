@@ -3,9 +3,6 @@ package persistencia;
 import exceptions.DataBaseException;
 import exceptions.InvalidInputException;
 import exceptions.SystemErrorException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import modelos.auxiliares.ModeloVeiculo;
 
@@ -14,10 +11,12 @@ public class ManipulaBancoModelos extends DataBase implements IManipulaBanco<Mod
     public ManipulaBancoModelos() {
         super(4, "ModelosVeiculos.txt");
     }
+
     @Override
     public String getNomeArquivoIdDisco() {
         return this.arquivoID;
     }
+
     @Override
     public ModeloVeiculo parse(String linha) throws SystemErrorException {
         try {
@@ -41,7 +40,7 @@ public class ManipulaBancoModelos extends DataBase implements IManipulaBanco<Mod
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<ModeloVeiculo> listaModelos = buscarTodos();
+        ArrayList<ModeloVeiculo> listaModelos = buscarTodosRemovidos();
 
         for (ModeloVeiculo modelo : listaModelos) {
             if (modelo.getNomeModelo().equals(dado)) {//    * encontrou
@@ -60,4 +59,17 @@ public class ManipulaBancoModelos extends DataBase implements IManipulaBanco<Mod
     public int getQuantidadeDeDadosSalvos() {
         return this.quantidadeDeDadosNoBanco;
     }
+
+    @Override
+    public int buscarNosExcluidos(String dado) throws InvalidInputException, SystemErrorException {
+        ArrayList<ModeloVeiculo> listaModelos = buscarTodosRemovidos();
+
+        for (ModeloVeiculo modelo : listaModelos) {
+            if (modelo.getNomeModelo().equals(dado)) {//    * encontrou
+                return getID(modelo);// * retornando o id
+            }
+        }
+        return 0;// * objeto não encontrado
+    }
+
 }
