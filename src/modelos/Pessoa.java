@@ -1,6 +1,7 @@
 // Essa classe será usada como a superclasse de todas as classes que tenham pessoas, pois teram vários atributos iguais
 package modelos;
 
+import exceptions.InvalidInputException;
 import java.util.Arrays;
 import modelos.auxiliares.Endereco;
 import java.util.InputMismatchException;
@@ -18,23 +19,18 @@ public abstract class Pessoa extends ExclusaoLogica {
     public Pessoa() {
     }
 
-    public Pessoa(String email, Endereco endereco, String[] telefone) {
-        if (!validaTelefone(telefone[0]) || !validaTelefone(telefone[1]) || !validaTelefone(telefone[2])) {
-            System.out.println(telefone.length);
-            System.out.println(Arrays.toString(telefone));
-            System.out.println(telefone[0] + "\t" + telefone[1] + "\t" + telefone[2]);
-            if (!validaTelefone(telefone[0])) {
-                throw new InputMismatchException("O Telefone:\"" + telefone[0] + "\" é inválido");
-            }
-            if (!validaTelefone(telefone[1])) {
-                throw new InputMismatchException("O Telefone:\"" + telefone[1] + "\" é inválido");
-            }
-            if (!validaTelefone(telefone[2])) {
-                throw new InputMismatchException("O Telefone:\"" + telefone[2] + "\" é inválido");
-            }
+    public Pessoa(String email, Endereco endereco, String[] telefone) throws InvalidInputException {
+        if (!validaTelefone(telefone[0]) && !telefone[0].equals("")) {
+            throw new InvalidInputException("O Telefone:\"" + telefone[0] + "\" é inválido");
+        }
+        if (!validaTelefone(telefone[1]) && !telefone[1].equals("")) {
+            throw new InvalidInputException("O Telefone:\"" + telefone[1] + "\" é inválido");
+        }
+        if (!validaTelefone(telefone[2]) && !telefone[2].equals("")) {
+            throw new InvalidInputException("O Telefone:\"" + telefone[2] + "\" é inválido");
         }
         if (!validaEmail(email)) {
-            throw new InputMismatchException("O email \"" + email + "\" é inválido");
+            throw new InvalidInputException("O email \"" + email + "\" é inválido");
         }
         this.telefone[0] = telefone[0].trim();//    * retirando espaços em branco
         this.telefone[1] = telefone[1].trim();//    * retirando espaços em branco
@@ -72,7 +68,7 @@ public abstract class Pessoa extends ExclusaoLogica {
         this.endereco = endereco;
     }
 
-    public boolean validaTelefone(String telefoneParaValidar) {
+    public final boolean validaTelefone(String telefoneParaValidar) {
         telefoneParaValidar = telefoneParaValidar.trim();
         if (telefoneParaValidar.matches("^\\([1-9]{2}\\) 9[7-9]{1}[0-9]{3}\\-[0-9]{4}$")) {
             return true;

@@ -5,6 +5,7 @@
  */
 package modelos;
 
+import exceptions.InvalidInputException;
 import java.text.SimpleDateFormat;
 import modelos.auxiliares.Endereco;
 import java.util.Date;
@@ -25,10 +26,10 @@ public class PessoaFisica extends Pessoa {
         super(email, endereco, telefone);
     }
 
-    public PessoaFisica(String nome, String cpf, Date dataNascimento, String email, Endereco endereco, String... telefone) {
+    public PessoaFisica(String nome, String cpf, Date dataNascimento, String email, Endereco endereco, String... telefone) throws InvalidInputException{
         super(email, endereco, telefone);
         if (!validaCPF(cpf)) {
-            throw new InputMismatchException("O CPF: " + cpf + " é inválido");
+            throw new InvalidInputException("O CPF: " + cpf + " é inválido");
         }
         this.nome = nome;
         this.cpf = formataCPF(cpf);

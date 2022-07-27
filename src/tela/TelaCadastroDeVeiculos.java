@@ -1059,36 +1059,32 @@ public class TelaCadastroDeVeiculos extends javax.swing.JInternalFrame {
         jComboBoxMarcas.setModel(new DefaultComboBoxModel<>(nomeModelos));
     }
 
-    private void loadTableClientes() {
-        try {
-            ArrayList<PessoaFisica> listaPessoasFisicas = new ManipulaBancoPessoaFisica().buscarTodos();
-            String[][] dados = new String[listaPessoasFisicas.size()][5];
-            for (int i = 0; i < listaPessoasFisicas.size(); i++) {
-                dados[i][0] = "" + TipoCliente.PESSOA_FISICA;
-                dados[i][1] = listaPessoasFisicas.get(i).getNome();
-                dados[i][2] = listaPessoasFisicas.get(i).getCpf();
-                dados[i][3] = listaPessoasFisicas.get(i).getTelefone()[0];
-                dados[i][4] = listaPessoasFisicas.get(i).getEmail();
-            }
-
-            jTabelaClientes.setModel(new DefaultTableModel(dados, new Object[]{"Tipo de cliente", "Nome/Razão social", "CPF/CNPJ", "Telefone", "Email"}));
-
-            DefaultTableModel table = (DefaultTableModel) jTabelaClientes.getModel();
-
-            ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
-            String[] dados2 = new String[5];
-            for (int i = 0; i < listaPessoasJuridicas.size(); i++) {
-                dados2[0] = "" + TipoCliente.PESSOA_JURIDICA;
-                dados2[1] = listaPessoasJuridicas.get(i).getRazaoSocial();
-                dados2[2] = listaPessoasJuridicas.get(i).getCnpj();
-                dados2[3] = listaPessoasJuridicas.get(i).getTelefone()[0];
-                dados2[4] = listaPessoasJuridicas.get(i).getEmail();
-                table.addRow(dados2);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void loadTableClientes() throws InvalidInputException, SystemErrorException {
+        ArrayList<PessoaFisica> listaPessoasFisicas = new ManipulaBancoPessoaFisica().buscarTodos();
+        String[][] dados = new String[listaPessoasFisicas.size()][5];
+        for (int i = 0; i < listaPessoasFisicas.size(); i++) {
+            dados[i][0] = "" + TipoCliente.PESSOA_FISICA;
+            dados[i][1] = listaPessoasFisicas.get(i).getNome();
+            dados[i][2] = listaPessoasFisicas.get(i).getCpf();
+            dados[i][3] = listaPessoasFisicas.get(i).getTelefone()[0];
+            dados[i][4] = listaPessoasFisicas.get(i).getEmail();
         }
+
+        jTabelaClientes.setModel(new DefaultTableModel(dados, new Object[]{"Tipo de cliente", "Nome/Razão social", "CPF/CNPJ", "Telefone", "Email"}));
+
+        DefaultTableModel table = (DefaultTableModel) jTabelaClientes.getModel();
+
+        ArrayList<PessoaJuridica> listaPessoasJuridicas = new ManipulaBancoPessoaJuridica().buscarTodos();
+        String[] dados2 = new String[5];
+        for (int i = 0; i < listaPessoasJuridicas.size(); i++) {
+            dados2[0] = "" + TipoCliente.PESSOA_JURIDICA;
+            dados2[1] = listaPessoasJuridicas.get(i).getRazaoSocial();
+            dados2[2] = listaPessoasJuridicas.get(i).getCnpj();
+            dados2[3] = listaPessoasJuridicas.get(i).getTelefone()[0];
+            dados2[4] = listaPessoasJuridicas.get(i).getEmail();
+            table.addRow(dados2);
+        }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

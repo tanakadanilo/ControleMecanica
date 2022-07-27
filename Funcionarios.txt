@@ -1,1 +1,4 @@
-2;sebas tião;480.460.780-34;23/11/1997;[(63) 98993-4220, (63) 98993-4220, (63) 98993-4220];sebastiao@gmail.com;Rua,rua do sorvete,127,Em frente a sorveteria,anapolitano,Anápolis,GO,75126-010;true;Pintor;2300.00;29.00;443
+2;sebas tião;480.460.780-34;23/11/1997;[(63) 98993-4220, (63) 98993-4220, (63) 98993-4220];sebastiao@gmail.com;Rua,rua do sorvete,127,Em frente a sorveteria,anapolitano,Anápolis,GO,75126-010;false;Pintor;2300.00;29.00;443
+2;sebas tião;480.460.780-34;23/11/1997;[(63) 98993-4223, (63) 98993-4223, (63) 98993-4223];sebastiao@gmail.com;Rua,rua do sorvete,127,Em frente a sorveteria,anapolitano,Anápolis,GO,75126-010;false;Pintor;2300.00;29.00;443
+2;sebas tião;480.460.780-34;23/11/1997;[(63) 98993-4221, (63) 98993-4222, (63) 98993-4223];sebastiao@gmail.com;Rua,rua do sorvete,127,Em frente a sorveteria,anapolitano,Anápolis,GO,75126-010;false;Pintor;2300.00;29.00;443
+2;sebas tião;480.460.780-34;23/11/1997;[63989934221, 63989934222, 63989934223];sebastiao@gmail.com;Rua,rua do sorvete,127,Em frente a sorveteria,anapolitano,Anápolis,GO,75126-010;true;Pintor;2300.00;29.00;443
