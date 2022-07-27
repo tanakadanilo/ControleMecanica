@@ -1,1 +1,2 @@
-2;Paula Tejano;244.364.020-53;23/06/2022;[62986532567, 62986532567, 62996722399];paulaTejano@hotmail.com;Rua,Ibirapuera,23b,,Centro,Goiânia,GO,65437-218;true
+2;Paula Tejano;244.364.020-53;23/06/2022;[62986532567, 62986532567, 62996722399];paulaTejano@hotmail.com;Rua,Ibirapuera,23b,,Centro,Goiânia,GO,65437-218;false
+2;Paula Tejano;244.364.020-53;23/06/2022;[(62) 98653-2567, (62) 98653-2567, (62) 99672-2399];paulaTejano@hotmail.com;Rua,Ibirapuera,23b,,Centro,Goiânia,GO,65437-218;false

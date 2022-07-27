@@ -5,6 +5,7 @@
  */
 package modelos;
 
+import exceptions.InvalidInputException;
 import modelos.auxiliares.Endereco;
 import java.util.InputMismatchException;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class PessoaJuridica extends Pessoa {
     public PessoaJuridica() {
     }
 
-    public PessoaJuridica(String cnpj, String razaoSocial, String nomeFantasia, String email, Endereco endereco, String... telefone) {
+    public PessoaJuridica(String cnpj, String razaoSocial, String nomeFantasia, String email, Endereco endereco, String... telefone) throws InvalidInputException {
         super(email, endereco, telefone);
         if (!validaCNPJ(cnpj)) {
             cnpj = desformatarCNPJ(cnpj);

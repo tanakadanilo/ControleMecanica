@@ -22,7 +22,7 @@ public class PessoaFisica extends Pessoa {
     protected String cpf;
     protected Date dataNascimento;
 
-    public PessoaFisica(String email, Endereco endereco, String... telefone) {
+    public PessoaFisica(String email, Endereco endereco, String... telefone) throws InvalidInputException {
         super(email, endereco, telefone);
     }
 

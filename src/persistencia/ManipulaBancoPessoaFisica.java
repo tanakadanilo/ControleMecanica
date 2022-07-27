@@ -82,7 +82,7 @@ public class ManipulaBancoPessoaFisica extends DataBase implements IManipulaBanc
 
     @Override
     public int buscar(String dado) throws InvalidInputException, SystemErrorException {
-        ArrayList<PessoaFisica> listaPessoas = buscarTodos();
+        ArrayList<PessoaFisica> listaPessoas = buscarTodosRemovidos();
         for (PessoaFisica p : listaPessoas) {
             if (p.getCpf().equals(dado) && p.isCadastroAtivo()) {//    * encontrou
                 return getID(p);//  * retornando o id
@@ -92,7 +92,7 @@ public class ManipulaBancoPessoaFisica extends DataBase implements IManipulaBanc
     }
 
     public int buscarPorNome(String Nome) throws Exception {
-        ArrayList<PessoaFisica> listaPessoas = buscarTodos();
+        ArrayList<PessoaFisica> listaPessoas = buscarTodosRemovidos();
         for (PessoaFisica p : listaPessoas) {
             if (p.getNome().equals(Nome)) {//    * encontrou
                 return getID(p);//  * retornando o id

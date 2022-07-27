@@ -5,6 +5,7 @@
  */
 package persistencia;
 
+import exceptions.DataBaseException;
 import exceptions.InvalidInputException;
 import exceptions.SystemErrorException;
 import geradorId.GeradorId;
@@ -136,7 +137,7 @@ public interface IManipulaBanco<T extends ExclusaoLogica> {
         }
     }
 
-    public default ArrayList<T> buscarTodosRemovidos() throws InvalidInputException, IOException, SystemErrorException {
+    public default ArrayList<T> buscarTodosRemovidos() throws InvalidInputException, SystemErrorException {
         ArrayList<T> listaCompleta = new ArrayList<>();
         try ( BufferedReader br = new BufferedReader(new FileReader(this.getNomeArquivoDisco()))) {
             String linha = br.readLine();
@@ -147,6 +148,9 @@ public interface IManipulaBanco<T extends ExclusaoLogica> {
                 }
                 linha = br.readLine();
             }
+        } catch (IOException e) {
+            corrigeBanco();
+            return buscarTodosRemovidos();
         }
 
         if (listaCompleta.isEmpty()) {//    * caso não tenha nenhum cadastro ativo

@@ -4,6 +4,7 @@
  */
 package modelos;
 
+import exceptions.InvalidInputException;
 import modelos.auxiliares.Endereco;
 import java.util.Date;
 
@@ -23,7 +24,7 @@ public class Funcionario extends PessoaFisica {
         super("emailNaoInformado@email.com", new Endereco(), "99999999999", "99999999999", "99999999999");
     }
 
-    public Funcionario(String especialidade, double salarioMensal, double salariohora, int matricula, String nome, String cpf, Date dataNascimento, String email, Endereco endereco, String... telefone) {
+    public Funcionario(String especialidade, double salarioMensal, double salariohora, int matricula, String nome, String cpf, Date dataNascimento, String email, Endereco endereco, String... telefone) throws InvalidInputException {
         super(nome, cpf, dataNascimento, email, endereco, telefone);
         this.especialidade = especialidade;
         this.salarioMensal = salarioMensal;
