@@ -19,7 +19,7 @@ public class Funcionario extends PessoaFisica {
     private double salariohora;
     private int matricula;
 
-    public Funcionario() {
+    public Funcionario() throws InvalidInputException {
 
         super("emailNaoInformado@email.com", new Endereco(), "99999999999", "99999999999", "99999999999");
     }
